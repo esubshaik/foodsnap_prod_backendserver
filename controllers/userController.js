@@ -9,7 +9,7 @@ const _password = process.env.EMAIL_PASSWORD
 
 const signup = async (req, res) => {
   try {
-    const { firstname, lastname, email, phone, password } = req.body;
+    const { name, email, phone, password } = req.body;
     const hasNumber = /\d/;
     const hasSpecialCharacter = /[!@#$%^&*()_+{}\[\]:;<>,.?~\\-]/;
     const hasUpperCase = /[A-Z]/;
@@ -19,7 +19,7 @@ const signup = async (req, res) => {
     const containsUpperCase = hasUpperCase.test(password);
 
     // console.log(phone)
-    if (!firstname || !lastname || !email || !password || !phone) {
+    if (!name || !email || !password || !phone) {
       return res.status(400).json({ message: "Fill all Details" });
     }
 
