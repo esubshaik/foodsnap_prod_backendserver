@@ -9,7 +9,7 @@ const _password = process.env.EMAIL_PASSWORD
 
 const signup = async (req, res) => {
   try {
-    const { name, email, phone, password } = req.body;
+    const { name, email,phone,password } = req.body;
     const hasNumber = /\d/;
     const hasSpecialCharacter = /[!@#$%^&*()_+{}\[\]:;<>,.?~\\-]/;
     const hasUpperCase = /[A-Z]/;
@@ -21,23 +21,22 @@ const signup = async (req, res) => {
     // console.log(phone)
     if (!name || !email || !password || !phone) {
       return res.status(400).json({ message: "Fill all Details" });
-    }
-
-    if (!containsNumber || !containsSpecialCharacter || !containsUpperCase) {
-      return res.status(400).json({ message: "Use at least one UpperCase letter, one Special Character, and one Number in Your Password" });
-    }
     
-    if (password.length < 7) {
-      return res.status(400).json({ message: "Your Password must be at least 7 Characters" });
     }
-
+    if (!containsNumber || !containsSpecialCharacter || !containsUpperCase) {
+    return res.status(400).json({message:"use atleast one UpperCase letter one Special Character and One Number in Your Password"})
+  }
+   if (password.length < 7) {
+    return res.status(400).json({message:"Your Password must be at least 7 Characters"})
+  }
     const isUser = await User.findOne({ email: email }); //undefined
     if (isUser) {
       return res.status(409).json({ message: "User already exists" });
     }
-
+    const hashedPassword = await bcrypt.hash(req.body.password, 10);
+    req.body.password = hashedPassword;
     const newUser = await User.create(req.body);
-    return res.status(200).json({ message: "User registered", user: newUser });
+    return res.status(200).json({ message: "user registered", user: newUser });
   } catch (err) {
     console.log(err);
     return res.status(500).json({ message: err.message });
