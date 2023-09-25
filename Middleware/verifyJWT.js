@@ -20,5 +20,5 @@ const isAuthenticated =async (req, res, next) => {
         return res.status(StatusCodes.FORBIDDEN).json({message: " Access Denied !",status : 403});
     }
   };
-
+ 
   module.exports={isAuthenticated}
