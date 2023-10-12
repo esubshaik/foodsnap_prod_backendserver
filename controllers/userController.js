@@ -199,6 +199,8 @@ const sendotp = async (req, res) => {
         charset: 'numeric'
       });
 
+    
+
       var transporter = nodemailer.createTransport({
         service: 'gmail',
         auth: {
