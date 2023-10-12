@@ -199,12 +199,6 @@ const sendotp = async (req, res) => {
         charset: 'numeric'
       });
 
-      const accessToken = await jwt.sign(
-        { userId: isUser._id },
-        process.env.ACCESS_TOKEN_SECRET,
-        { expiresIn: "1d", }
-      );
-
       var transporter = nodemailer.createTransport({
         service: 'gmail',
         auth: {
