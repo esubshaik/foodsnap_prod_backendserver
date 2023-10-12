@@ -26,10 +26,6 @@ const UserSchema = new mongoose.Schema(
   }
 );
 
-// UserSchema.virtual("entries", {
-//   ref: "DiaryEntry",
-//   localField: "_id",
-//   foreignField: "user",
-// });
+
 
 module.exports = mongoose.model("User", UserSchema);

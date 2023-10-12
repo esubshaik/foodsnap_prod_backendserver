@@ -4,6 +4,7 @@ const fs = require('fs');
 const nodemailer = require("nodemailer");
 const axios = require('axios');
 require("dotenv").config();
+const randomstring = require('randomstring');
 const _email = process.env.EMAIL
 const _password = process.env.EMAIL_PASSWORD
 
@@ -187,10 +188,62 @@ const resetpassword = async (req, res) => {
   }
 };
 
+const sendotp = async (req, res) => {
+  try {
+    const { email } = req.body;
+    console.log(email)
+    if (!email) return res.status(400).json({ message: "Fill Email Properly" });
+    const isUser = await User.findOne({ email });
+
+    if (!isUser) {
+      const otp = randomstring.generate({
+        length: 6, // Adjust the length as needed
+        charset: 'numeric'
+      });
+
+      const accessToken = await jwt.sign(
+        { userId: isUser._id },
+        process.env.ACCESS_TOKEN_SECRET,
+        { expiresIn: "1d", }
+      );
+
+      var transporter = nodemailer.createTransport({
+        service: 'gmail',
+        auth: {
+          user: _email,
+          pass: _password,
+        }
+      });
+
+      var mailOptions = {
+        from: _email,
+        to: email,
+        subject: 'OTP Verification',
+        text: `Please use the following One-time-password (OTP) for Registration: ${otp}, Do not share this OTP. \n \n If you didn't request this, please Ignore this mail or let us know \n Regards, \n Food-eye team. `
+      };
+
+      transporter.sendMail(mailOptions, function (error, info) {
+        if (error) {
+          console.log(error);
+        } else {
+          console.log('Email sent: ' + info.response);
+        }
+      });
+      return res.status(200).json({ message: "OTP Sent Successfully!",OTP: `${otp}` });
+    }
+    
+  }
+  catch (err) {
+    console.log(err);
+    return res.status(500).json({ message: "Please Request OTP again!" });
+  }
+}
+
 
 module.exports = {
   signup,
   signin,
   forgetpassword,
-  resetpassword
+  resetpassword,
+  sendotp
 };
