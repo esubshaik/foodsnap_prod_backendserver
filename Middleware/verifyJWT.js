@@ -1,9 +1,7 @@
 const jwt=require("jsonwebtoken");
 const  StatusCodes= require("http-status-codes");
 const isAuthenticated =async (req, res, next) => {
-  if(req.body === '/send-otp') {
-    next();
-  }
+  
     const authHeader = req.headers.authorization;
     if (!authHeader || !authHeader.startsWith("Bearer ")) {
       return res.status(StatusCodes.BAD_REQUEST).json({Error: "Please provide bearer token"});
