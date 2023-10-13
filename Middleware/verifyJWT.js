@@ -1,6 +1,7 @@
 const jwt=require("jsonwebtoken");
 const  StatusCodes= require("http-status-codes");
 const isAuthenticated =async (req, res, next) => {
+  console.log(req.path);
   
     const authHeader = req.headers.authorization;
     if (!authHeader || !authHeader.startsWith("Bearer ")) {
