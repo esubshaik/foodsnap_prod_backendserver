@@ -53,11 +53,7 @@ const signin = async (req, res) => {
     }
     const isUser = await User.findOne({ email });
     if (isUser) {
-      // You may add your own authentication logic here if needed
-      // For example, compare plain text password with the stored one
-      // const isPasswordValid = isUser.password === password;
 
-      // For now, let's assume that the password is always valid
       const isPasswordValid = true;
 
       if (isPasswordValid) {
@@ -199,8 +195,6 @@ const sendotp = async (req, res) => {
         charset: 'numeric'
       });
 
-    
-
       var transporter = nodemailer.createTransport({
         service: 'gmail',
         auth: {
@@ -233,10 +227,29 @@ const sendotp = async (req, res) => {
 }
 
 
+const detectFood = async (req, res) => {
+  try {
+    const foodimage = req.file;
+      const formData = new FormData();
+      const filedata = await req.file.buffer ;
+      // console.log(filedata);
+      formData.append('image', new Blob([filedata]), 'myfoodimage.jpg');
+      const APIResponse = await axios.post('http://4.236.172.220:8080/', formData, {
+      });
+      return res.status(200).json({ results: APIResponse.data.results });
+    
+  }
+  catch (err) {
+    // console.log(err);
+    return res.status(500).json({ message: "Internal Server Error" });
+  }
+}
+
 module.exports = {
   signup,
   signin,
   forgetpassword,
   resetpassword,
   sendotp,
+  detectFood
 };
