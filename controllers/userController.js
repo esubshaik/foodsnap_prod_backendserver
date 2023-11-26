@@ -230,9 +230,10 @@ const sendotp = async (req, res) => {
 const detectFood = async (req, res) => {
   try {
     const foodimage = req.file;
+    console.log(foodimage);
       const formData = new FormData();
       const filedata = await req.file.buffer ;
-      // console.log(filedata);
+      console.log(filedata);
       formData.append('image', new Blob([filedata]), 'myfoodimage.jpg');
       const APIResponse = await axios.post('http://4.236.172.220:8080/', formData, {
       });
