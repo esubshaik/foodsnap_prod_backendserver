@@ -237,7 +237,7 @@ const detectFood = async (req, res) => {
       formData.append('image', new Blob([filedata]), 'myfoodimage.jpg');
       const APIResponse = await axios.post('http://4.236.172.220:8080/', formData, {
       });
-      return res.status(200).json({ results: APIResponse.data.results });
+      return res.status(200).json({ data: APIResponse.data });
     
   }
   catch (err) {
