@@ -12,10 +12,11 @@ const isAuthenticated =async (req, res, next) => {
       return res.status(StatusCodes.UNAUTHORIZED).json({Error: "Invalid Token !"});
     }
     try {
+      next();
       const payload = jwt.verify(token, process.env.ACCESS_TOKEN_SECRET);
       req.userId = payload.userId;
       req.role = payload.role;
-      next();
+      
     } catch (error) {
         console.log(error)
         return res.status(StatusCodes.FORBIDDEN).json({message: " Access Denied !",status : 403});

@@ -230,10 +230,10 @@ const sendotp = async (req, res) => {
 const detectFood = async (req, res) => {
   try {
     const foodimage = req.file;
-    console.log(foodimage);
+    // console.log(foodimage);
       const formData = new FormData();
       const filedata = await req.file.buffer ;
-      console.log(filedata);
+      // console.log(filedata);
       formData.append('image', new Blob([filedata]), 'myfoodimage.jpg');
       const APIResponse = await axios.post('http://4.236.172.220:8080/', formData, {
       });
@@ -245,6 +245,19 @@ const detectFood = async (req, res) => {
     return res.status(500).json({ message: "Internal Server Error" });
   }
 }
+const foodAnalyzer = async(req,res)=>{
+  const { foodname }= req.body;
+  console.log(foodname);
+  try{
+    const response = await axios.post('https://getfood-nutritional-info.onrender.com/get_nutrition?food_name='+{foodname}) ;
+    console.log(response);
+    return res.status(200).json({results: response.data});
+  }
+  catch(err){
+    return res.status(500).json({ message: "Internal Server Error" });
+  }
+}
+
 
 module.exports = {
   signup,
@@ -252,5 +265,6 @@ module.exports = {
   forgetpassword,
   resetpassword,
   sendotp,
-  detectFood
+  detectFood,
+  foodAnalyzer
 };
