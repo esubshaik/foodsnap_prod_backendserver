@@ -246,7 +246,8 @@ const detectFood = async (req, res) => {
   }
 }
 const foodAnalyzer = async(req,res)=>{
-  const { foodname }= req.body;
+  console.log(req.body);
+  const foodname  = req.body;
   console.log(foodname);
   try{
     const response = await axios.post('https://getfood-nutritional-info.onrender.com/get_nutrition?food_name='+{foodname}) ;
@@ -266,5 +267,5 @@ module.exports = {
   resetpassword,
   sendotp,
   detectFood,
-  foodAnalyzer
+  foodAnalyzer,
 };

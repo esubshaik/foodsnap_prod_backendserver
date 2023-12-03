@@ -1,7 +1,7 @@
 const jwt=require("jsonwebtoken");
 const  StatusCodes= require("http-status-codes");
 const isAuthenticated =async (req, res, next) => {
-  console.log(req.path);
+  // console.log(req.path);
   
     const authHeader = req.headers.authorization;
     if (!authHeader || !authHeader.startsWith("Bearer ")) {
@@ -12,10 +12,10 @@ const isAuthenticated =async (req, res, next) => {
       return res.status(StatusCodes.UNAUTHORIZED).json({Error: "Invalid Token !"});
     }
     try {
-      next();
       const payload = jwt.verify(token, process.env.ACCESS_TOKEN_SECRET);
       req.userId = payload.userId;
       req.role = payload.role;
+      next();
       
     } catch (error) {
         console.log(error)
