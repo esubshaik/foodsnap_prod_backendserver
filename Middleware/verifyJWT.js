@@ -1,7 +1,6 @@
 const jwt=require("jsonwebtoken");
 const  StatusCodes= require("http-status-codes");
 const isAuthenticated =async (req, res, next) => {
-  // console.log(req.path);
   
     const authHeader = req.headers.authorization;
     if (!authHeader || !authHeader.startsWith("Bearer ")) {
@@ -16,11 +15,10 @@ const isAuthenticated =async (req, res, next) => {
       req.userId = payload.userId;
       req.role = payload.role;
       next();
-      
     } catch (error) {
         console.log(error)
         return res.status(StatusCodes.FORBIDDEN).json({message: " Access Denied !",status : 403});
     }
   };
- 
+
   module.exports={isAuthenticated}

@@ -245,15 +245,17 @@ const detectFood = async (req, res) => {
     return res.status(500).json({ message: "Internal Server Error" });
   }
 }
+
 const foodAnalyzer = async(req,res)=>{
-  console.log(req.body);
-  const foodname  = req.body;
-  console.log(foodname);
+  // console.log(req.body);
+  const foodname  = req.body['foodname'];
+  // console.log(foodname);
   try{
-    const response = await axios.post('https://getfood-nutritional-info.onrender.com/get_nutrition?food_name='+{foodname}) ;
-    console.log(response);
-    return res.status(200).json({results: response.data});
+    const response = await axios.get(`https://getfood-nutritional-info.onrender.com/get_nutrition?food_name=${foodname}`);
+    // console.log(response);
+    return res.status(200).json({data: response.data});
   }
+
   catch(err){
     return res.status(500).json({ message: "Internal Server Error" });
   }

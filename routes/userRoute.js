@@ -13,7 +13,7 @@ router.route("/login").post(signin);
 router.route("/forgetpassword").post(forgetpassword);
 router.route("/resetpassword/:userId/:accessToken").post(resetpassword);
 router.route('/send-otp').post(sendotp);
-router.route('/analyze-food').post(isAuthenticated,foodAnalyzer);
+router.route('/analyze-food').post(foodAnalyzer);
 router.post('/detect-my-food',upload.single('image'),detectFood);
 router.use(isAuthenticated);
 module.exports = router;
