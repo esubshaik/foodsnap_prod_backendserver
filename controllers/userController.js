@@ -270,7 +270,7 @@ const addNutriData = async (req, res) => {
     // console.log(req.userId);
     const newEntry = new nutrientry({
       nutridata : nutridata,
-      user: req.userId,
+      user: req.userId
     });
 
     await newEntry.save();
@@ -282,6 +282,20 @@ const addNutriData = async (req, res) => {
 
 };
 
+const getNutriData=async(req,res)=>{
+  try {
+    const userId = req.userId;
+    const nutridata = await User.findById(userId).populate("nutrientries"); // Populate the user's entries
+    
+    const entries = nutridata.nutrientries; // Access the populated entries
+    console.log(entries);
+    return res.status(200).json({ entries });
+  } catch (error) {
+    // console.error("Error fetching entries:", error);
+    return res.status(500).json({ message: error.message });
+  }
+}
+
 
 module.exports = {
   signup,
@@ -292,4 +306,5 @@ module.exports = {
   detectFood,
   foodAnalyzer,
   addNutriData,
+  getNutriData
 };
