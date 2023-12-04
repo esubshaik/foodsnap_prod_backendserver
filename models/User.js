@@ -29,7 +29,6 @@ UserSchema.virtual("nutrientries", {
   ref: "nutrientry",
   localField: "_id",
   foreignField: "user",
-
 });
 
 

@@ -249,16 +249,16 @@ const detectFood = async (req, res) => {
 
 const foodAnalyzer = async(req,res)=>{
   // console.log(req.body);
-  const foodname  = req.body['foodname'];
+  const foodname  = await req.body['foodname'];
   // console.log(foodname);
   try{
-    const response = await axios.get(`https://backend-server-lhw8.onrender.com/get_nutrition?food_name=${foodname}`);
+    const response = await axios.get(`https://getfood-nutritional-info.onrender.com/get_nutrition?food_name=${foodname}`);
     // console.log(response);
     return res.status(200).json({data: response.data});
   }
 
   catch(err){
-    return res.status(500).json({ message: "Internal Server Error" });
+    return res.status(500).json({ message: err.message });
   }
 }
 
@@ -266,8 +266,8 @@ const foodAnalyzer = async(req,res)=>{
 const addNutriData = async (req, res) => {
   try {
     const { nutridata } = req.body;
-    console.log(nutridata);
-    console.log(req.userId);
+    // console.log(nutridata);
+    // console.log(req.userId);
     const newEntry = new nutrientry({
       nutridata : nutridata,
       user: req.userId,
