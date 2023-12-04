@@ -25,6 +25,12 @@ const UserSchema = new mongoose.Schema(
     },
   }
 );
+UserSchema.virtual("nutrientries", {
+  ref: "nutrientry",
+  localField: "_id",
+  foreignField: "user",
+
+});
 
 
 

@@ -3,6 +3,7 @@ const jwt = require("jsonwebtoken");
 const fs = require('fs');
 const nodemailer = require("nodemailer");
 const axios = require('axios');
+const nutrientry = require("../models/StoreNutri");
 const randomstring = require('randomstring');
 require("dotenv").config();
 const _email = process.env.EMAIL
@@ -251,7 +252,7 @@ const foodAnalyzer = async(req,res)=>{
   const foodname  = req.body['foodname'];
   // console.log(foodname);
   try{
-    const response = await axios.get(`https://getfood-nutritional-info.onrender.com/get_nutrition?food_name=${foodname}`);
+    const response = await axios.get(`https://backend-server-lhw8.onrender.com/get_nutrition?food_name=${foodname}`);
     // console.log(response);
     return res.status(200).json({data: response.data});
   }
@@ -262,6 +263,26 @@ const foodAnalyzer = async(req,res)=>{
 }
 
 
+const addNutriData = async (req, res) => {
+  try {
+    const { nutridata } = req.body;
+    console.log(nutridata);
+    console.log(req.userId);
+    const newEntry = new nutrientry({
+      nutridata : nutridata,
+      user: req.userId,
+    });
+
+    await newEntry.save();
+    return res.status(200).json({ message: "Nutrition Info Recorded" });
+  }
+  catch (error) {
+    return res.status(500).json({ message: error.message });
+  }
+
+};
+
+
 module.exports = {
   signup,
   signin,
@@ -270,4 +291,5 @@ module.exports = {
   sendotp,
   detectFood,
   foodAnalyzer,
+  addNutriData,
 };
