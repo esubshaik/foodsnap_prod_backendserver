@@ -266,8 +266,6 @@ const foodAnalyzer = async(req,res)=>{
 const addNutriData = async (req, res) => {
   try {
     const { nutridata } = req.body;
-    // console.log(nutridata);
-    // console.log(req.userId);
     const newEntry = new nutrientry({
       nutridata : nutridata,
       user: req.userId
@@ -282,20 +280,41 @@ const addNutriData = async (req, res) => {
 
 };
 
-const getNutriData=async(req,res)=>{
+const getNutriData = async (req, res) => {
   try {
     const userId = req.userId;
     const nutridata = await User.findById(userId).populate("nutrientries"); // Populate the user's entries
     
     const entries = nutridata.nutrientries; // Access the populated entries
-    console.log(entries);
-    return res.status(200).json({ entries });
+
+    // Filter entries created today
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+    const entriesToday = entries.filter(entry => {
+      const entryDate = new Date(entry.createdAt);
+      entryDate.setHours(0, 0, 0, 0);
+      return entryDate.getTime() === today.getTime();
+    });
+
+    console.log(entriesToday);
+    return res.status(200).json({ entries: entriesToday });
   } catch (error) {
-    // console.error("Error fetching entries:", error);
+    console.error("Error fetching entries:", error);
     return res.status(500).json({ message: error.message });
   }
-}
+};
 
+
+const req_calories = async(req,res)=>{
+  const { age,gender } = req.params ;
+  try {
+    const response = await axios.get(`https://query-min-max-calories.onrender.com/get_minmax_calorie?user_age=${age}&user_gender=${gender}`);
+    return res.status(200).json({data: response.data});
+  }
+  catch(err) {
+    return res.status(500).json({ message: err.message });
+  }
+}
 
 module.exports = {
   signup,
@@ -306,5 +325,7 @@ module.exports = {
   detectFood,
   foodAnalyzer,
   addNutriData,
-  getNutriData
+  getNutriData,
+  req_calories
+
 };
