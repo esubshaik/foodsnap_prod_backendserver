@@ -287,7 +287,7 @@ const getNutriData = async (req, res) => {
     const nutridata = await User.findById(userId).populate("nutrientries"); // Populate the user's entries
     
     const entries = nutridata.nutrientries; // Access the populated entries
-
+    const allentries = entries ;
     // Filter entries created today
     const today = new Date();
     today.setHours(0, 0, 0, 0);
@@ -298,7 +298,7 @@ const getNutriData = async (req, res) => {
     });
 
     console.log(entriesToday);
-    return res.status(200).json({ entries: entriesToday });
+    return res.status(200).json({ entries: entriesToday,allentries });
   } catch (error) {
     console.error("Error fetching entries:", error);
     return res.status(500).json({ message: error.message });
