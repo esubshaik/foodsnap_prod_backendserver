@@ -383,6 +383,17 @@ const updateProfile=async(req,res)=>{
     return res.status(500).json({ message: error.message });
   } 
 }
+const getUserProfile=async(req,res)=>{
+  try{
+    const _id = req.userId ;
+    console.log(_id);
+    const isUser = await User.findOne({ _id: _id });
+    return res.status(200).json({age: isUser.age,height: isUser.height, weight: isUser.weight})
+  }
+  catch(error){
+    return res.status(500).json({ message: error.message });
+  }
+}
 
 module.exports = {
   signup,
@@ -397,5 +408,6 @@ module.exports = {
   req_calories,
   gethydrateData,
   addhydrate,
-  updateProfile
+  updateProfile,
+  getUserProfile
 };
