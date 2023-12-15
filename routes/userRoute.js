@@ -19,7 +19,7 @@ router.route('/get-nutridata').get(isAuthenticated,getNutriData);
 router.post('/detect-my-food',upload.single('image'),detectFood);
 router.route("/req-calories/:age/:gender").get(req_calories);
 // ,
-//   
+//  
 router.route('/store-hydrate').post(isAuthenticated,addhydrate);
 router.route('/get-hydrate').get(isAuthenticated,gethydrateData);
 router.use(isAuthenticated);

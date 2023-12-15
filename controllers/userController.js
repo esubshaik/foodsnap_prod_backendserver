@@ -266,8 +266,9 @@ const foodAnalyzer = async(req,res)=>{
 
 const addNutriData = async (req, res) => {
   try {
-    const { nutridata } = req.body;
+    const { nutridata,food_name } = req.body;
     const newEntry = new nutrientry({
+      foodname : food_name,
       nutridata : nutridata,
       user: req.userId
     });

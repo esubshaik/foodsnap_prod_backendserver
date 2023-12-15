@@ -1,6 +1,9 @@
 const mongoose = require("mongoose");
 const nutriSchema = new mongoose.Schema(
     {
+      foodname : {
+        type: String
+      },
         nutridata: {
           type: [String],
           required: [true, "Data is required"],
