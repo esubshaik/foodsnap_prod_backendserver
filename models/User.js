@@ -14,6 +14,15 @@ const UserSchema = new mongoose.Schema(
       type: String,
       required: [true, "password is required"],
     },
+    age :{
+      type: String,
+    },
+    height :{
+      type: String,
+    },
+    weight: {
+      type: String,
+    }
   },
   {
     timestamps: true,

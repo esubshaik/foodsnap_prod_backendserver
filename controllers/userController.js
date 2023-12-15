@@ -12,7 +12,7 @@ const hydrateentry = require("../models/Hydration");
 
 const signup = async (req, res) => {
   try {
-    const { name, email, phone, password } = req.body;
+    const { name, email, phone, password ,age,height,weight } = req.body;
     const hasNumber = /\d/;
     const hasSpecialCharacter = /[!@#$%^&*()_+{}\[\]:;<>,.?~\\-]/;
     const hasUpperCase = /[A-Z]/;
@@ -70,6 +70,9 @@ const signin = async (req, res) => {
           message: "Login successful",
           name: isUser.name,
           accessToken,
+          age,
+          height,
+          weight
         });
       } else {
         return res.status(401).json({ message: "Invalid Credentials" });
@@ -354,10 +357,29 @@ const gethydrateData = async (req, res) => {
     console.log(entriesToday);
     return res.status(200).json({ entries: entriesToday });
   } catch (error) {
-    console.error("Error fetching entries:", error);
+    console.error("Error fetching hydration entries:", error);
     return res.status(500).json({ message: error.message });
   }
 };
+
+const updateProfile=async(req,res)=>{
+  const {age,height,weight} = req.body ;
+  const id = req.userId ;
+  try{
+    const updatedEntry = await User.findByIdAndUpdate(id, {
+      age,
+      height,
+      weight,
+    });
+    if(updatedEntry){
+      return res.status(200).json({ message : "Profile Updated Successfully" });
+    }
+  }
+  catch (error) {
+    console.error("Error fetching user :", error);
+    return res.status(500).json({ message: error.message });
+  } 
+}
 
 module.exports = {
   signup,
@@ -371,5 +393,6 @@ module.exports = {
   getNutriData,
   req_calories,
   gethydrateData,
-  addhydrate
+  addhydrate,
+  updateProfile
 };
