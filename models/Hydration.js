@@ -1,9 +1,9 @@
 const mongoose = require("mongoose");
-const nutriSchema = new mongoose.Schema(
+const hydrateSchema = new mongoose.Schema(
     {
-        nutridata: {
-          type: [String],
-          required: [true, "Data is required"],
+        hydrate: {
+          type: String,
+          required: [true, "water quantity is required"],
     },
         user: {
           type: mongoose.Schema.Types.ObjectId,
@@ -16,5 +16,5 @@ const nutriSchema = new mongoose.Schema(
       }
     );
     
-module.exports = mongoose.model("nutrientry", nutriSchema);
+module.exports = mongoose.model("hydrate", hydrateSchema);
     

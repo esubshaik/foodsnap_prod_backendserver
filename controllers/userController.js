@@ -8,6 +8,7 @@ const randomstring = require('randomstring');
 require("dotenv").config();
 const _email = process.env.EMAIL
 const _password = process.env.EMAIL_PASSWORD
+const hydrateentry = require("../models/Hydration");
 
 const signup = async (req, res) => {
   try {
@@ -316,6 +317,47 @@ const req_calories = async(req,res)=>{
   }
 }
 
+const addhydrate = async(req,res)=>{
+  // hydrateentres
+  try {
+    const { hydratedata } = req.body;
+    const newEntry = new hydrateentry({
+      hydrate : hydratedata,
+      user: req.userId
+    });
+
+    await newEntry.save();
+    return res.status(200).json({ message: "Hydration Info Recorded" });
+  }
+  catch (error) {
+    return res.status(500).json({ message: error.message });
+  }
+}
+
+const gethydrateData = async (req, res) => {
+  try {
+    const userId = req.userId;
+    const hydata = await User.findById(userId).populate("hydrateentries"); // Populate the user's entries
+    
+    const entries = hydata.hydrateentries; // Access the populated entries
+
+    // Filter entries created today
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+    const entriesToday = entries.filter(entry => {
+      const entryDate = new Date(entry.createdAt);
+      entryDate.setHours(0, 0, 0, 0);
+      return entryDate.getTime() === today.getTime();
+    });
+
+    console.log(entriesToday);
+    return res.status(200).json({ entries: entriesToday });
+  } catch (error) {
+    console.error("Error fetching entries:", error);
+    return res.status(500).json({ message: error.message });
+  }
+};
+
 module.exports = {
   signup,
   signin,
@@ -326,6 +368,7 @@ module.exports = {
   foodAnalyzer,
   addNutriData,
   getNutriData,
-  req_calories
-
+  req_calories,
+  gethydrateData,
+  addhydrate
 };

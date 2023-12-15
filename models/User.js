@@ -31,6 +31,11 @@ UserSchema.virtual("nutrientries", {
   foreignField: "user",
 });
 
+UserSchema.virtual("hydrateentries", {
+  ref: "hydrate",
+  localField: "_id",
+  foreignField: "user",
+});
 
 
 module.exports = mongoose.model("User", UserSchema);
