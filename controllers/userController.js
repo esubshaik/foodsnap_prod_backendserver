@@ -66,6 +66,9 @@ const signin = async (req, res) => {
             expiresIn: "7d",
           }
         );
+        const age = isUser.age;
+        const height = isUser.height;
+        const weight = isUser.weight ;
         return res.status(200).json({
           message: "Login successful",
           name: isUser.name,
