@@ -317,8 +317,15 @@ const getNutriData = async (req, res) => {
 
 const req_calories = async(req,res)=>{
   const { age,gender } = req.params ;
+  let c_gender = "" ;
+  if (gender == "male"){
+    c_gender = 'men';
+  }
+  else{
+    c_gender = 'women';
+  }
   try {
-    const response = await axios.get(`https://query-min-max-calories.onrender.com/get_minmax_calorie?user_age=${age}&user_gender=${gender}`);
+    const response = await axios.get(`https://query-min-max-calories.onrender.com/get_minmax_calorie?user_age=${age}&user_gender=${c_gender}`);
     return res.status(200).json({data: response.data});
   }
   catch(err) {
