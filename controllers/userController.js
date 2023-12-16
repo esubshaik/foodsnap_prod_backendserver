@@ -75,7 +75,8 @@ const signin = async (req, res) => {
           accessToken,
           age,
           height,
-          weight
+          weight,
+          gender
         });
       } else {
         return res.status(401).json({ message: "Invalid Credentials" });
