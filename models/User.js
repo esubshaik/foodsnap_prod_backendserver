@@ -22,6 +22,9 @@ const UserSchema = new mongoose.Schema(
     },
     weight: {
       type: String,
+    },
+    gender : {
+      type: String,
     }
   },
   {

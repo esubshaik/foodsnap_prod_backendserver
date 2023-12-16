@@ -12,7 +12,7 @@ const hydrateentry = require("../models/Hydration");
 
 const signup = async (req, res) => {
   try {
-    const { name, email, phone, password ,age,height,weight } = req.body;
+    const { name, email, phone, password ,age,height,weight,gender } = req.body;
     const hasNumber = /\d/;
     const hasSpecialCharacter = /[!@#$%^&*()_+{}\[\]:;<>,.?~\\-]/;
     const hasUpperCase = /[A-Z]/;
@@ -366,13 +366,14 @@ const gethydrateData = async (req, res) => {
 };
 
 const updateProfile=async(req,res)=>{
-  const {age,height,weight} = req.body ;
+  const {age,height,weight,gender} = req.body ;
   const id = req.userId ;
   try{
     const updatedEntry = await User.findByIdAndUpdate(id, {
       age,
       height,
       weight,
+      gender
     });
     if(updatedEntry){
       return res.status(200).json({ message : "Profile Updated Successfully" });
@@ -386,9 +387,9 @@ const updateProfile=async(req,res)=>{
 const getUserProfile=async(req,res)=>{
   try{
     const _id = req.userId ;
-    console.log(_id);
+    // console.log(_id);
     const isUser = await User.findOne({ _id: _id });
-    return res.status(200).json({age: isUser.age,height: isUser.height, weight: isUser.weight})
+    return res.status(200).json({age: isUser.age,height: isUser.height, weight: isUser.weight,gender : isUser.gender})
   }
   catch(error){
     return res.status(500).json({ message: error.message });
