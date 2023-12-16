@@ -69,6 +69,7 @@ const signin = async (req, res) => {
         const age = isUser.age;
         const height = isUser.height;
         const weight = isUser.weight ;
+        const gender = isUser.gender ;
         return res.status(200).json({
           message: "Login successful",
           name: isUser.name,
