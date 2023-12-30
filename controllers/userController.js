@@ -405,6 +405,18 @@ const getUserProfile=async(req,res)=>{
   }
 }
 
+const deleteFood = async (req, res) => {
+  const foodid = req.body.itemid; // Corrected line
+  try {
+    await nutrientry.findByIdAndDelete(foodid);
+    return res.status(200).json({ message: 'Successfully deleted.' });
+  } catch (err) {
+    return res.status(500).json({ message: err.message });
+  }
+};
+
+
+
 module.exports = {
   signup,
   signin,
@@ -419,5 +431,6 @@ module.exports = {
   gethydrateData,
   addhydrate,
   updateProfile,
-  getUserProfile
+  getUserProfile,
+  deleteFood
 };
