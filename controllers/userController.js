@@ -423,7 +423,7 @@ const deleteFood = async (req, res) => {
 };
 
 const updateStatus=async(req,res)=>{
-  const [pstatus,astatus] = req.body ;
+  const {pstatus,astatus} = req.body ;
   const id = req.userId ;
   try{
     const updatedEntry = await User.findByIdAndUpdate(id, {
