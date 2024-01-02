@@ -28,6 +28,12 @@ const UserSchema = new mongoose.Schema(
     },
     pushtoken : {
       type : String,
+    },
+    pstatus : {
+      type: Number,
+    },
+    astatus : {
+      type : Number,
     }
   },
   {

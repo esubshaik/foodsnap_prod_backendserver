@@ -12,7 +12,7 @@ const hydrateentry = require("../models/Hydration");
 
 const signup = async (req, res) => {
   try {
-    const { name, email, phone, password ,age,height,weight,gender,pushtoken } = req.body;
+    const { name, email, phone, password ,age,height,weight,gender,pushtoken,pstatus,astatus } = req.body;
     const hasNumber = /\d/;
     const hasSpecialCharacter = /[!@#$%^&*()_+{}\[\]:;<>,.?~\\-]/;
     const hasUpperCase = /[A-Z]/;
@@ -79,7 +79,9 @@ const signin = async (req, res) => {
           age,
           height,
           weight,
-          gender
+          gender,
+          pstatus,
+          astatus,
         });
       } else {
         return res.status(401).json({ message: "Invalid Credentials" });

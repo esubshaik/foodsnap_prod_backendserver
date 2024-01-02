@@ -72,7 +72,7 @@ mongoose
     cron.schedule(`0 ${currentHour} * * *`, async() => {
       const allusers = await User.find({}) ;
       for(var i = 0 ; i < allusers.length; i++){
-        if(allusers[i].pushtoken != ''){
+        if(allusers[i].pushtoken != '' && allusers[i].pstatus === 1){
           sendExpoNotification(allusers[i].pushtoken, notificationMessage.title, notificationMessage.body);
         }
       }
