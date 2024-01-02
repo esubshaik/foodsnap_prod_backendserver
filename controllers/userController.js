@@ -42,7 +42,7 @@ const signup = async (req, res) => {
     const newUser = await User.create(req.body);
     return res.status(200).json({ message: "User registered", user: newUser });
   } catch (err) {
-    console.log(err);
+    // console.log(err);
     return res.status(500).json({ message: err.message });
   }
 };
@@ -88,7 +88,7 @@ const signin = async (req, res) => {
       return res.status(404).json({ message: "User Not Found" });
     }
   } catch (err) {
-    console.log(err);
+    // console.log(err);
     return res.status(500).json({ message: "Internal Server Error" });
   }
 };
@@ -96,7 +96,7 @@ const signin = async (req, res) => {
 const forgetpassword = async (req, res) => {
   try {
     const { email } = req.body;
-    console.log(email)
+    // console.log(email)
     if (!email) return res.status(400).json({ message: "Fill Email Properly" });
     const isUser = await User.findOne({ email });
 
@@ -125,9 +125,9 @@ const forgetpassword = async (req, res) => {
 
       transporter.sendMail(mailOptions, function (error, info) {
         if (error) {
-          console.log(error);
+          // console.log(error);
         } else {
-          console.log('Email sent: ' + info.response);
+          // console.log('Email sent: ' + info.response);
         }
       });
       return res.status(200).json({ message: "Password Recovery Email sent successfully!!" });
@@ -138,7 +138,7 @@ const forgetpassword = async (req, res) => {
     }
   }
   catch (err) {
-    console.log(err);
+    // console.log(err);
     return res.status(500).json({ message: "Internal Server Error" });
   }
 }
@@ -182,16 +182,16 @@ const resetpassword = async (req, res) => {
 
       transporter.sendMail(mailOptions, (error, info) => {
         if (error) {
-          console.log(error);
+          // console.log(error);
         } else {
-          console.log('Email sent: ' + info.response);
+          // console.log('Email sent: ' + info.response);
         }
       });
 
       return res.status(200).json({ message: "Password reset successful" });
     });
   } catch (err) {
-    console.log(err);
+    // console.log(err);
     return res.status(500).json({ message: "Internal Server Error" });
   }
 };
@@ -199,7 +199,7 @@ const resetpassword = async (req, res) => {
 const sendotp = async (req, res) => {
   try {
     const { email } = req.body;
-    console.log(email)
+    // console.log(email)
     if (!email) return res.status(400).json({ message: "Fill Email Properly" });
     
       const otp = randomstring.generate({
@@ -224,16 +224,16 @@ const sendotp = async (req, res) => {
 
       transporter.sendMail(mailOptions, function (error, info) {
         if (error) {
-          console.log(error);
+          // console.log(error);
         } else {
-          console.log('Email sent: ' + info.response);
+          // console.log('Email sent: ' + info.response);
         }
       });
       return res.status(200).json({ message: "OTP Sent Successfully!",OTP: `${otp}` });
     
   }
   catch (err) {
-    console.log(err);
+    // console.log(err);
     return res.status(500).json({ message: "Please Request OTP again!" });
   }
 }
@@ -308,10 +308,10 @@ const getNutriData = async (req, res) => {
       return entryDate.getTime() === today.getTime();
     });
 
-    console.log(entriesToday);
+    // console.log(entriesToday);
     return res.status(200).json({ entries: entriesToday,allentries: allentries });
   } catch (error) {
-    console.error("Error fetching entries:", error);
+    // console.error("Error fetching entries:", error);
     return res.status(500).json({ message: error.message });
   }
 };
@@ -368,10 +368,10 @@ const gethydrateData = async (req, res) => {
       return entryDate.getTime() === today.getTime();
     });
 
-    console.log(entriesToday);
+    // console.log(entriesToday);
     return res.status(200).json({ entries: entriesToday });
   } catch (error) {
-    console.error("Error fetching hydration entries:", error);
+    // console.error("Error fetching hydration entries:", error);
     return res.status(500).json({ message: error.message });
   }
 };
@@ -391,7 +391,7 @@ const updateProfile=async(req,res)=>{
     }
   }
   catch (error) {
-    console.error("Error fetching user :", error);
+    // console.error("Error fetching user :", error);
     return res.status(500).json({ message: error.message });
   } 
 }

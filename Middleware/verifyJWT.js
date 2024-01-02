@@ -16,7 +16,7 @@ const isAuthenticated =async (req, res, next) => {
       req.role = payload.role;
       next();
     } catch (error) {
-        console.log(error)
+        // console.log(error)
         return res.status(StatusCodes.FORBIDDEN).json({message: " Access Denied !",status : 403});
     }
   };

@@ -16,10 +16,10 @@ mongoose
     useUnifiedTopology: true,
   })
   .then(() => {
-    console.log("Connected to MongoDB Atlas!");
+    // console.log("Connected to MongoDB Atlas!");
   })
   .catch((error) => {
-    console.error("Error connecting to MongoDB Atlas:", error);
+    // console.error("Error connecting to MongoDB Atlas:", error);
   });
 
 
