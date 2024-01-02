@@ -12,7 +12,7 @@ const hydrateentry = require("../models/Hydration");
 
 const signup = async (req, res) => {
   try {
-    const { name, email, phone, password ,age,height,weight,gender } = req.body;
+    const { name, email, phone, password ,age,height,weight,gender,pushtoken } = req.body;
     const hasNumber = /\d/;
     const hasSpecialCharacter = /[!@#$%^&*()_+{}\[\]:;<>,.?~\\-]/;
     const hasUpperCase = /[A-Z]/;
@@ -49,12 +49,14 @@ const signup = async (req, res) => {
 
 const signin = async (req, res) => {
   try {
-    const { email, password } = req.body;
+    const { email, password, pushtoken } = req.body;
     if (!email || !password) {
       return res.status(400).json({ message: "Fill all details" });
     }
     const isUser = await User.findOne({ email });
     if (isUser) {
+      const id = isUser._id ;
+      await User.findByIdAndUpdate(id, {pushtoken : pushtoken});
 
       const isPasswordValid = true;
 
