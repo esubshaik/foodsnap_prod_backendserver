@@ -381,6 +381,7 @@ const gethydrateData = async (req, res) => {
 };
 
 const updateProfile=async(req,res)=>{
+  
   const {age,height,weight,gender} = req.body ;
   const id = req.userId ;
   try{
@@ -421,6 +422,23 @@ const deleteFood = async (req, res) => {
   }
 };
 
+const updateStatus=async(req,res)=>{
+  const [pstatus,astatus] = req.body ;
+  const id = req.userId ;
+  try{
+    const updatedEntry = await User.findByIdAndUpdate(id, {
+      pstatus,
+      astatus
+    });
+    if(updatedEntry){
+      return res.status(200).json({ message : "Successfull" });
+    }
+  }
+  catch (error) {
+    // console.error("Error fetching user :", error);
+    return res.status(500).json({ message: error.message });
+  } 
+}
 
 
 module.exports = {
@@ -438,5 +456,6 @@ module.exports = {
   addhydrate,
   updateProfile,
   getUserProfile,
-  deleteFood
+  deleteFood,
+  updateStatus
 };

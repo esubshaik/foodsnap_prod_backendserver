@@ -4,7 +4,9 @@ const upload = multer({ storage });
 
 const { isAuthenticated } = require("../Middleware/verifyJWT");
 const express = require("express");
-const {signup,signin,forgetpassword,resetpassword,sendotp,detectFood,foodAnalyzer,addNutriData,getNutriData,req_calories,addhydrate,gethydrateData,updateProfile,getUserProfile,deleteFood} = require("../controllers/userController");
+const {signup,signin,forgetpassword,resetpassword,sendotp,detectFood,foodAnalyzer,
+addNutriData,getNutriData,req_calories,addhydrate,gethydrateData,updateProfile,
+getUserProfile,deleteFood,updateStatus} = require("../controllers/userController");
 const userController = require("../controllers/userController");
 
 const router = express.Router();
@@ -21,6 +23,7 @@ router.route('/get-nutridata').get(isAuthenticated,getNutriData);
 router.post('/detect-my-food',upload.single('image'),detectFood);
 router.route("/req-calories/:age/:gender").get(req_calories);
 router.route('/get-user-profile').get(isAuthenticated,getUserProfile);
+router.route('/update-status').put(isAuthenticated,updateStatus);
 // 
 //  
 router.route('/store-hydrate').post(isAuthenticated,addhydrate);
