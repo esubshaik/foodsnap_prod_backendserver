@@ -65,11 +65,11 @@ mongoose
   }
   
   let notificationMessage;
-  if (currentHour === 7 || currentHour === 13 || currentHour === 18) {
+  if (currentHour === 7 || currentHour === 13 || currentHour === 19) {
     const index = currentHour === 7 ? 0 : currentHour === 13 ? 1 : 2;
     notificationMessage = notifyarr[index];
   
-    cron.schedule(`47 ${currentHour} * * *`, async() => {
+    cron.schedule(`0 ${currentHour} * * *`, async() => {
       const allusers = await User.find({}) ;
       for(var i = 0 ; i < allusers.length; i++){
         if(allusers[i].pushtoken != ''){
