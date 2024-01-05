@@ -449,7 +449,7 @@ const getRecommendations = async(req,res)=>{
   const weight = user.weight ;
   const height  = user.height ;
   try{
-    const response = await axios.get(process.env.HOSTED_API_URL+`/get_recommendations?weight=${weight}&height=${height}&food_name=${foodname}`);
+    const response = await axios.get(process.env.HOSTED_API_URL+`/get_recommendations?weight=${weight}&height=${height}&foodname=${foodname}`);
     return res.status(200).json({data: response.data});
   }
 
