@@ -441,6 +441,23 @@ const updateStatus=async(req,res)=>{
   } 
 }
 
+const getRecommendations = async(req,res)=>{
+
+  const foodname  = await req.body['foodname'];
+  const id = req.userId ;
+  const user = await User.findById(id);
+  const weight = user.weight ;
+  const height  = user.height ;
+  try{
+    const response = await axios.get(process.env.HOSTED_API_URL+`/get_recommendations?weight=${weight}&height=${height}&food_name=${foodname}`);
+    return res.status(200).json({data: response.data});
+  }
+
+  catch(err){
+    return res.status(500).json({ message: err.message });
+  }
+}
+
 
 module.exports = {
   signup,
@@ -458,5 +475,6 @@ module.exports = {
   updateProfile,
   getUserProfile,
   deleteFood,
-  updateStatus
+  updateStatus,
+  getRecommendations
 };
