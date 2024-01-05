@@ -10,6 +10,7 @@ const _email = process.env.EMAIL
 const _password = process.env.EMAIL_PASSWORD
 const hydrateentry = require("../models/Hydration");
 
+
 const signup = async (req, res) => {
   try {
     const { name, email, phone, password ,age,height,weight,gender,pushtoken,pstatus,astatus } = req.body;
@@ -251,7 +252,7 @@ const detectFood = async (req, res) => {
       const filedata = await req.file.buffer ;
       // console.log(filedata);
       formData.append('image', new Blob([filedata]), 'myfoodimage.jpg');
-      const APIResponse = await axios.post('http://4.236.172.220:8080/', formData, {
+      const APIResponse = await axios.post(process.env.HOSTED_FOOD_DETECTION_URL, formData, {
       });
       return res.status(200).json({ data: APIResponse.data });
     
@@ -267,7 +268,7 @@ const foodAnalyzer = async(req,res)=>{
   const foodname  = await req.body['foodname'];
   // console.log(foodname);
   try{
-    const response = await axios.get(`https://getfood-nutritional-info.onrender.com/get_nutrition?food_name=${foodname}`);
+    const response = await axios.get(process.env.HOSTED_API_URL+`/get_nutrition?food_name=${foodname}`);
     // console.log(response);
     return res.status(200).json({data: response.data});
   }
@@ -331,7 +332,7 @@ const req_calories = async(req,res)=>{
     c_gender = 'women';
   }
   try {
-    const response = await axios.get(`https://getfood-nutritional-info.onrender.com/get_minmax_calorie?user_age=${age}&user_gender=${c_gender}`);
+    const response = await axios.get(process.env.HOSTED_API_URL+`/get_minmax_calorie?user_age=${age}&user_gender=${c_gender}`);
     return res.status(200).json({data: response.data});
   }
   catch(err) {
