@@ -457,6 +457,16 @@ const getRecommendations = async(req,res)=>{
     return res.status(500).json({ message: err.message });
   }
 }
+const getmoreDescription = async(req,res)=>{
+  const foodname  = await req.body['foodname'];
+  try{
+    const response = await axios.get(process.env.HOSTED_API_URL+`/get_description?foodname=${foodname}`);
+    return res.status(200).json({data: response.data});
+  }
+  catch(err){
+    return res.status(500).json({ message: err.message });
+  }
+}
 
 
 module.exports = {
@@ -476,5 +486,6 @@ module.exports = {
   getUserProfile,
   deleteFood,
   updateStatus,
-  getRecommendations
+  getRecommendations,
+  getmoreDescription
 };
