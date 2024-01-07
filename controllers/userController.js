@@ -1,6 +1,7 @@
 const User = require("../models/User");
 const jwt = require("jsonwebtoken");
 const fs = require('fs');
+const bcrypt = require("bcrypt");
 const nodemailer = require("nodemailer");
 const axios = require('axios');
 const nutrientry = require("../models/StoreNutri");
@@ -39,7 +40,8 @@ const signup = async (req, res) => {
     if (isUser) {
       return res.status(409).json({ message: "User already exists" });
     }
-
+    const hashedPassword = await bcrypt.hash(req.body.password, 10);
+    req.body.password = hashedPassword;
     const newUser = await User.create(req.body);
     return res.status(200).json({ message: "User registered", user: newUser });
   } catch (err) {
@@ -59,7 +61,7 @@ const signin = async (req, res) => {
       const id = isUser._id ;
       await User.findByIdAndUpdate(id, {pushtoken : pushtoken});
 
-      const isPasswordValid = true;
+      const isPasswordValid = await bcrypt.compare(password, isUser.password);
 
       if (isPasswordValid) {
         const accessToken = await jwt.sign(
