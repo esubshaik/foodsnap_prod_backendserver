@@ -469,6 +469,22 @@ const getmoreDescription = async(req,res)=>{
     return res.status(500).json({ message: err.message });
   }
 }
+const registerPushNotification=async(req,res)=>{
+  const pushtoken = await req.body['pushtoken'];
+  const id = req.userId ;
+  try{
+    const updatedEntry = await User.findByIdAndUpdate(id, {
+      pushtoken
+    });
+    if(updatedEntry){
+      return res.status(200).json({ message : "Successfull" });
+    }
+  }
+  catch (error) {
+    // console.error("Error fetching user :", error);
+    return res.status(500).json({ message: error.message });
+  } 
+}
 
 
 module.exports = {
@@ -489,5 +505,6 @@ module.exports = {
   deleteFood,
   updateStatus,
   getRecommendations,
-  getmoreDescription
+  getmoreDescription,
+  registerPushNotification
 };
