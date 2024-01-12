@@ -496,7 +496,7 @@ const getDietReport = async (req, res) => {
       { responseType: 'arraybuffer' } // Set responseType to 'arraybuffer'
     );
 
-    res.status(200).end(response.data, 'binary');
+    res.status(200).end(await response.data, 'binary');
   } catch (error) {
     console.error(error);
     res.status(500).json({ message: error.message });
