@@ -493,7 +493,9 @@ const getDietReport = async (req, res) => {
     const response = await axios.post(
       process.env.HOSTED_API_URL + `/get_pdf`,
       form,
-      { responseType: 'arraybuffer' } // Set responseType to 'arraybuffer'
+      { responseType: 'arraybuffer',
+        timeout: 25000
+     } // Set responseType to 'arraybuffer'
     );
 
     res.status(200).end(await response.data, 'binary');
