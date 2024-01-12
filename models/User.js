@@ -26,6 +26,9 @@ const UserSchema = new mongoose.Schema(
     gender : {
       type: String,
     },
+    calrange:{
+      type: String,
+    },
     pushtoken : {
       type : String,
     },

@@ -387,12 +387,24 @@ const updateProfile=async(req,res)=>{
   
   const {age,height,weight,gender} = req.body ;
   const id = req.userId ;
+  let c_gender = "" ;
+  if (gender == "male"){
+    c_gender = 'men';
+  }
+  else{
+    c_gender = 'women';
+  }
   try{
+    const minMax = await axios.get(process.env.HOSTED_API_URL+`/get_minmax_calorie?user_age=${age}&user_gender=${c_gender}`);
+    const mincalperday = minMax.data['min_calories'] ;
+    const maxcalperday = minMax.data['max_calories'] ;
+    const calrange = mincalperday+" - "+maxcalperday ;
     const updatedEntry = await User.findByIdAndUpdate(id, {
       age,
       height,
       weight,
-      gender
+      gender,
+      calrange,
     });
     if(updatedEntry){
       return res.status(200).json({ message : "Profile Updated Successfully" });
@@ -469,6 +481,28 @@ const getmoreDescription = async(req,res)=>{
     return res.status(500).json({ message: err.message });
   }
 }
+const getDietReport = async (req, res) => {
+  const id = req.userId;
+  try {
+    const form = new FormData();
+    form.append("type", 1);
+    form.append("user_id", id);
+    form.append("start", "2024-01-01T00:00:00.000+00:00");
+    form.append("end", "2024-01-13T00:00:00.000+00:00");
+
+    const response = await axios.post(
+      process.env.HOSTED_API_URL + `/get_pdf`,
+      form,
+      { responseType: 'arraybuffer' } // Set responseType to 'arraybuffer'
+    );
+
+    res.status(200).end(response.data, 'binary');
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: error.message });
+  }
+};
+
 const registerPushNotification=async(req,res)=>{
   const pushtoken = await req.body['pushtoken'];
   const id = req.userId ;
@@ -506,5 +540,6 @@ module.exports = {
   updateStatus,
   getRecommendations,
   getmoreDescription,
-  registerPushNotification
+  registerPushNotification,
+  getDietReport
 };

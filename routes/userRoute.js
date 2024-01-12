@@ -6,7 +6,8 @@ const { isAuthenticated } = require("../Middleware/verifyJWT");
 const express = require("express");
 const {signup,signin,forgetpassword,resetpassword,sendotp,detectFood,foodAnalyzer,
 addNutriData,getNutriData,req_calories,addhydrate,gethydrateData,updateProfile,
-getUserProfile,deleteFood,updateStatus,getRecommendations,getmoreDescription,registerPushNotification} = require("../controllers/userController");
+getUserProfile,deleteFood,updateStatus,getRecommendations,getmoreDescription,
+registerPushNotification,getDietReport} = require("../controllers/userController");
 const userController = require("../controllers/userController");
 
 const router = express.Router();
@@ -27,6 +28,7 @@ router.route('/update-status').put(isAuthenticated,updateStatus);
 router.route('/get_recommendations').post(isAuthenticated,getRecommendations);
 router.route('/get_more_description').post(getmoreDescription);
 router.route('/register-push-notification').put(isAuthenticated,registerPushNotification);
+router.route('/diet-report').post(isAuthenticated,getDietReport);
 // 
 //  
 router.route('/store-hydrate').post(isAuthenticated,addhydrate);
