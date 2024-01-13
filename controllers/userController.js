@@ -5,6 +5,7 @@ const bcrypt = require("bcrypt");
 const nodemailer = require("nodemailer");
 const axios = require('axios');
 const nutrientry = require("../models/StoreNutri");
+const ticketentry = require("../models/tickets");
 const randomstring = require('randomstring');
 require("dotenv").config();
 const _email = process.env.EMAIL
@@ -521,6 +522,32 @@ const registerPushNotification=async(req,res)=>{
     return res.status(500).json({ message: error.message });
   } 
 }
+const saveTicket = async(req,res)=>{
+  try {
+    const { title,content } = req.body;
+    const newEntry = new ticketentry({
+      title : title,
+      content : content,
+      user: req.userId
+    });
+    await newEntry.save();
+    return res.status(200).json({ message: "Support request successfull" });
+  }
+  catch (error) {
+    return res.status(500).json({ message: error.message });
+}
+}
+const getTicket=async(req,res)=>{
+  try{
+    const id = req.userId ;
+    const ticketdata = await User.findById(id).populate("ticketentries"); // Populate the user's entries
+    const entries = ticketdata.ticketentries;
+    return res.status(200).json({ tickets: entries});
+  }
+  catch (error) {
+    return res.status(500).json({ message: error.message });
+}
+}
 
 
 module.exports = {
@@ -543,5 +570,7 @@ module.exports = {
   getRecommendations,
   getmoreDescription,
   registerPushNotification,
-  getDietReport
+  getDietReport,
+  saveTicket,
+  getTicket
 };
