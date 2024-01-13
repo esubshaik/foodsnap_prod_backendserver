@@ -528,6 +528,7 @@ const saveTicket = async(req,res)=>{
     const newEntry = new ticketentry({
       title : title,
       content : content,
+      status: 0,
       user: req.userId
     });
     await newEntry.save();

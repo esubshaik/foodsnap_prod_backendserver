@@ -7,6 +7,9 @@ const ticketSchema = new mongoose.Schema(
         content: {
             type: String
         },
+        status: {
+            type: Number
+        },
         user: {
             type: mongoose.Schema.Types.ObjectId,
             ref: "User",
