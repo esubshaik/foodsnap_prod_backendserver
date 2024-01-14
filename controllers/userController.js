@@ -565,20 +565,17 @@ const getTicket = async (req, res) => {
 const updateFullProfile = async (req, res) => {
   try {
     const { name, email, phone, location, age, height, weight, currpass, newpass, confirmpass } = req.body;
-    console.log(req.body);
     if (newpass != confirmpass) {
       return res.status(500).json({ message: "New passwords doesn't match" });
     }
-    const isuser = User.findById(req.userId);
-
-    // const isPasswordValid = await bcrypt.compare(currpass, isuser.password);
-    // const isuser = await User.findById(req.userId);
-
+    const id = req.userId ;
+    const isuser = await User.findById(id);
+   
     if (!isuser) {
       return res.status(404).json({ message: "User not found" });
     }
-
-    const isPasswordValid = isuser.password ? await bcrypt.compare(currpass, isuser.password) : false;
+    
+    const isPasswordValid = await bcrypt.compare(currpass, isuser.password);
 
     if (isPasswordValid) {
       const updatedUser = await User.findByIdAndUpdate(isuser._id, {
@@ -623,7 +620,6 @@ const updateFullProfile = async (req, res) => {
     }
     return res.status(400).json({ message: "Please Enter a valid password" });
   } catch (err) {
-    console.log(err);
     return res.status(500).json({ message: err.message });
   }
 
