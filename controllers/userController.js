@@ -86,6 +86,7 @@ const signin = async (req, res) => {
           height,
           weight,
           gender,
+          location,
           pstatus,
           astatus,
           nstatus,
