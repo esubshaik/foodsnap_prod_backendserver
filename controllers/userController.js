@@ -570,7 +570,16 @@ const updateFullProfile = async (req, res) => {
       return res.status(500).json({ message: "New passwords doesn't match" });
     }
     const isuser = User.findById(req.userId);
-    const isPasswordValid = await bcrypt.compare(currpass, isuser.password);
+
+    // const isPasswordValid = await bcrypt.compare(currpass, isuser.password);
+    // const isuser = await User.findById(req.userId);
+
+    if (!isuser) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    const isPasswordValid = isuser.password ? await bcrypt.compare(currpass, isuser.password) : false;
+
     if (isPasswordValid) {
       const updatedUser = await User.findByIdAndUpdate(req.userId, {
         name: name,
@@ -598,17 +607,17 @@ const updateFullProfile = async (req, res) => {
           return res.status(400).json({ message: "Your Password must be at least 7 Characters" });
         }
         const hashedPassword = await bcrypt.hash(newpass, 10);
-        const updatedPass = await  User.findByIdAndUpdate(req.userId, {
+        const updatedPass = await User.findByIdAndUpdate(req.userId, {
           password: hashedPassword
         });
         if (updatedPass) {
           return res.status(200).json({ message: "Profile updated Successfully" });
         }
       }
-      if(updatedUser){
+      if (updatedUser) {
         return res.status(200).json({ message: "Profile updated Successfully" });
       }
-      else{
+      else {
         return res.status(400).json({ message: "One or more required fields are missing" });
       }
     }
