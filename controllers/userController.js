@@ -59,8 +59,6 @@ const signin = async (req, res) => {
     const isUser = await User.findOne({ email });
     if (isUser) {
       const id = isUser._id ;
-      await User.findByIdAndUpdate(id, {pushtoken : pushtoken});
-
       const isPasswordValid = await bcrypt.compare(password, isUser.password);
 
       if (isPasswordValid) {
