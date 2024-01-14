@@ -80,6 +80,7 @@ const signin = async (req, res) => {
         const fstatus = isUser.fstatus;
         const ostatus = isUser.ostatus ;
         const calrange = isUser.calrange ;
+        const phone = isUser.phone
         return res.status(200).json({
           message: "Login successful",
           name: isUser.name,
@@ -94,7 +95,8 @@ const signin = async (req, res) => {
           nstatus,
           fstatus,
           ostatus,
-          calrange
+          calrange,
+          phone
         });
       } else {
         return res.status(401).json({ message: "Invalid Credentials" });
