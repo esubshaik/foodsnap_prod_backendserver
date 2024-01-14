@@ -73,6 +73,7 @@ const signin = async (req, res) => {
         const height = isUser.height;
         const weight = isUser.weight ;
         const gender = isUser.gender ;
+        const location = isUser.location;
         const pstatus = isUser.pstatus ;
         const astatus = isUser.astatus ;
         const nstatus = isUser.nstatus ;
