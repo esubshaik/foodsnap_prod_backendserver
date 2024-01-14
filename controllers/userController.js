@@ -52,7 +52,7 @@ const signup = async (req, res) => {
 
 const signin = async (req, res) => {
   try {
-    const { email, password, pushtoken } = req.body;
+    const { email, password } = req.body;
     if (!email || !password) {
       return res.status(400).json({ message: "Fill all details" });
     }
