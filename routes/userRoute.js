@@ -31,7 +31,7 @@ router.route('/register-push-notification').put(isAuthenticated,registerPushNoti
 router.route('/diet-report').post(isAuthenticated,getDietReport);
 router.route('/support-request').post(isAuthenticated,saveTicket);
 router.route('/support-request').get(isAuthenticated,getTicket);
-router.route('/update-fullprofile').post(isAuthenticated,updateFullProfile)
+router.route('/update-fullprofile').put(isAuthenticated,updateFullProfile);
 
 // 
 //  
