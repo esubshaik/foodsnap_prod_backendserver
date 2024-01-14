@@ -430,7 +430,7 @@ const getUserProfile=async(req,res)=>{
     const _id = req.userId ;
     // console.log(_id);
     const isUser = await User.findOne({ _id: _id });
-    return res.status(200).json({age: isUser.age,height: isUser.height, weight: isUser.weight,gender : isUser.gender, calrange: isUser.calrange})
+    return res.status(200).json({age: isUser.age,height: isUser.height, weight: isUser.weight,gender : isUser.gender, calrange: isUser.calrange, location: isUser.location})
   }
   catch(error){
     return res.status(500).json({ message: error.message });
