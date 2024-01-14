@@ -29,7 +29,7 @@ const UserSchema = new mongoose.Schema(
     calrange:{
       type: String,
     },
-    pushtoken : {
+    location : {
       type : String,
     },
     pstatus : {
@@ -37,7 +37,16 @@ const UserSchema = new mongoose.Schema(
     },
     astatus : {
       type : Number,
-    }
+    },
+    nstatus : {
+      type : Number,
+    },
+    fstatus : {
+      type : Number,
+    },
+    ostatus : {
+      type : Number,
+    },
   },
   {
     timestamps: true,
