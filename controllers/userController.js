@@ -565,6 +565,7 @@ const getTicket = async (req, res) => {
 const updateFullProfile = async (req, res) => {
   try {
     const { name, email, phone, location, age, height, weight, currpass, newpass, confirmpass } = req.body;
+    console.log(req.body);
     if (newpass != confirmpass) {
       return res.status(500).json({ message: "New passwords doesn't match" });
     }
