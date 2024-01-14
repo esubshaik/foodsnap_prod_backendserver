@@ -581,7 +581,7 @@ const updateFullProfile = async (req, res) => {
     const isPasswordValid = isuser.password ? await bcrypt.compare(currpass, isuser.password) : false;
 
     if (isPasswordValid) {
-      const updatedUser = await User.findByIdAndUpdate(req.userId, {
+      const updatedUser = await User.findByIdAndUpdate(isuser._id, {
         name: name,
         email: email,
         phone: phone,
