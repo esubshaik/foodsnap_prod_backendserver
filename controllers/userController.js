@@ -571,7 +571,7 @@ const updateFullProfile = async (req, res) => {
     const isuser = User.findById(req.userId);
     const isPasswordValid = await bcrypt.compare(currpass, isuser.password);
     if (isPasswordValid) {
-      const updatedUser = User.findByIdAndUpdate(req.userId, {
+      const updatedUser = await User.findByIdAndUpdate(req.userId, {
         name: name,
         email: email,
         phone: phone,
@@ -597,7 +597,7 @@ const updateFullProfile = async (req, res) => {
           return res.status(400).json({ message: "Your Password must be at least 7 Characters" });
         }
         const hashedPassword = await bcrypt.hash(newpass, 10);
-        const updatedPass = User.findByIdAndUpdate(req.userId, {
+        const updatedPass = await  User.findByIdAndUpdate(req.userId, {
           password: hashedPassword
         });
         if (updatedPass) {
@@ -613,6 +613,7 @@ const updateFullProfile = async (req, res) => {
     }
     return res.status(400).json({ message: "Please Enter a valid password" });
   } catch (err) {
+    console.log(err);
     return res.status(500).json({ message: err.message });
   }
 
