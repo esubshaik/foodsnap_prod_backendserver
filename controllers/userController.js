@@ -230,7 +230,7 @@ const sendotp = async (req, res) => {
         from: _email,
         to: email,
         subject: 'OTP Verification',
-        text: `Please use the following One-time-password (OTP) for Registration: ${otp}, Do not share this OTP. \n \n If you didn't request this, please Ignore this mail or let us know \n Regards, \n Food-eye team. `
+        text: `Please use the following One-time-password (OTP) for Registration: ${otp}, Do not share this OTP. \n \n If you didn't request this, please Ignore this mail or let us know \n Regards, \n FoodSnap team. `
       };
 
       transporter.sendMail(mailOptions, function (error, info) {
