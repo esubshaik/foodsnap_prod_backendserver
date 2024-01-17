@@ -32,6 +32,9 @@ const UserSchema = new mongoose.Schema(
     calrange:{
       type: String,
     },
+    needs: {
+      type: [String],
+    },
     location : {
       type : String,
     },

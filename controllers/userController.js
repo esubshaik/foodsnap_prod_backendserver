@@ -392,9 +392,45 @@ const gethydrateData = async (req, res) => {
   }
 };
 
-const updateProfile = async (req, res) => {
+function calculateCalories(age, weight, height, gender, activityFactor) {
+  let bmr;
 
-  const { age, height, weight, gender, location } = req.body;
+  if (gender.toLowerCase() === 'male') {
+    bmr = 88.362 + (13.397 * weight) + (4.799 * height) - (5.677 * age);
+  } else if (gender.toLowerCase() === 'female') {
+    bmr = 447.593 + (9.247 * weight) + (3.098 * height) - (4.330 * age);
+  } else {
+    return 'Invalid gender';
+  }
+  const totalCalories = bmr * activityFactor;
+  return totalCalories;
+}
+
+function calculateMacronutrients(totalCalories) {
+  // Macronutrient distribution percentages
+  const fatPercentage = 30; // Adjust as needed
+  const proteinPercentage = 25; // Adjust as needed
+  const carbPercentage = 45; // Adjust as needed
+
+  // Calculate macronutrient calories based on percentages
+  const fatCalories = (fatPercentage / 100) * totalCalories;
+  const proteinCalories = (proteinPercentage / 100) * totalCalories;
+  const carbCalories = (carbPercentage / 100) * totalCalories;
+
+  // Convert macronutrient calories to grams (since 1g of fat = 9 calories, 1g of protein = 4 calories, and 1g of carbohydrate = 4 calories)
+  const fatGrams = fatCalories / 9;
+  const proteinGrams = proteinCalories / 4;
+  const carbGrams = carbCalories / 4;
+
+  return {
+    fatGrams,
+    proteinGrams,
+    carbGrams,
+  };
+}
+
+const updateProfile = async (req, res) => {
+  const { age, height, weight, gender, location,activityfactor } = req.body;
   const id = req.userId;
   let c_gender = "";
   if (gender == "male") {
@@ -408,12 +444,39 @@ const updateProfile = async (req, res) => {
     const mincalperday = minMax.data['min_calories'];
     const maxcalperday = minMax.data['max_calories'];
     const calrange = mincalperday + " - " + maxcalperday;
+    let af = 0 ;
+    if (activityfactor == 0){
+      af = 1.2 ;
+    }
+    else if (activityfactor == 1){
+      af = 1.375 ;
+    }
+    else if (activityfactor == 2){
+      af = 1.55 ;
+    }
+    else if (activityfactor == 3){
+      af = 1.725 ;
+    }
+    else if (activityfactor == 4) {
+      af = 1.9 ;
+    }
+
+    // const sedentaryFactor = 1.2;
+    // const lightlyActiveFactor = 1.375;
+    // const moderatelyActiveFactor = 1.55;
+    // const veryActiveFactor = 1.725;
+    // const extremelyActiveFactor = 1.9;
+
+    const req_cal = calculateCalories(age, weight, height, gender, af);
+    const {fatc,protc,carbc} = calculateMacronutrients(req_cal) ;
+    const needs = [req_cal,fatc,protc,carbc] ;
     const updatedEntry = await User.findByIdAndUpdate(id, {
       age,
       height,
       weight,
       gender,
       calrange,
+      needs,
       location
     });
     if (updatedEntry) {
@@ -421,7 +484,6 @@ const updateProfile = async (req, res) => {
     }
   }
   catch (error) {
-    // console.error("Error fetching user :", error);
     return res.status(500).json({ message: error.message });
   }
 }
@@ -568,13 +630,13 @@ const updateFullProfile = async (req, res) => {
     if (newpass != confirmpass) {
       return res.status(500).json({ message: "New passwords doesn't match" });
     }
-    const id = req.userId ;
+    const id = req.userId;
     const isuser = await User.findById(id);
-   
+
     if (!isuser) {
       return res.status(404).json({ message: "User not found" });
     }
-    
+
     const isPasswordValid = await bcrypt.compare(currpass, isuser.password);
 
     if (isPasswordValid) {
