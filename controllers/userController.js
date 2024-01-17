@@ -422,11 +422,11 @@ function calculateMacronutrients(totalCalories) {
   const proteinGrams = proteinCalories / 4;
   const carbGrams = carbCalories / 4;
 
-  return {
+  return [
     fatGrams,
     proteinGrams,
     carbGrams,
-  };
+  ];
 }
 
 const updateProfile = async (req, res) => {
@@ -468,7 +468,7 @@ const updateProfile = async (req, res) => {
     // const extremelyActiveFactor = 1.9;
 
     const req_cal = calculateCalories(age, weight, height, gender, af);
-    const {fatc,protc,carbc} = calculateMacronutrients(req_cal) ;
+    const [fatc,protc,carbc] = calculateMacronutrients(req_cal) ;
     const needs = [req_cal,fatc,protc,carbc] ;
     const updatedEntry = await User.findByIdAndUpdate(id, {
       age,
