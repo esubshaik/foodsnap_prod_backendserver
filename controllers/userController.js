@@ -15,7 +15,7 @@ const hydrateentry = require("../models/Hydration");
 
 const signup = async (req, res) => {
   try {
-    const { name, email, phone, password, age, height, weight, gender, location, pstatus, astatus, nstatus, fstatus, ostatus, calrange } = req.body;
+    const { name, email, phone, password, age, height, weight, gender, location, pstatus, astatus, nstatus, fstatus, ostatus, calrange, needs} = req.body;
     const hasNumber = /\d/;
     const hasSpecialCharacter = /[!@#$%^&*()_+{}\[\]:;<>,.?~\\-]/;
     const hasUpperCase = /[A-Z]/;
