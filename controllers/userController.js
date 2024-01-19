@@ -557,12 +557,16 @@ const getmoreDescription = async (req, res) => {
 }
 const getDietReport = async (req, res) => {
   const id = req.userId;
+  const start  = req.body['start']
+  const end  = req.body['end']
   try {
     const form = new FormData();
     form.append("type", 1);
     form.append("user_id", id);
-    form.append("start", "2024-01-01T00:00:00.000+00:00");
-    form.append("end", "2024-01-13T00:00:00.000+00:00");
+    // form.append("start", "2024-01-18T12:27:43.961+00:00");
+    form.append("start",start)
+    form.append("end",end);
+    // form.append("end", "2024-01-19T07:28:53.443+00:00");
 
     const response = await axios.post(
       process.env.HOSTED_API_URL + `/get_pdf`,
@@ -575,7 +579,7 @@ const getDietReport = async (req, res) => {
 
     res.status(200).end(await response.data, 'binary');
   } catch (error) {
-    console.error(error);
+    // console.error(error);
     res.status(500).json({ message: error.message });
   }
 };
