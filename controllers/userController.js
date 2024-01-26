@@ -376,16 +376,16 @@ const gethydrateData = async (req, res) => {
     const entries = hydata.hydrateentries; // Access the populated entries
 
     // Filter entries created today
-    const today = new Date();
-    today.setHours(0, 0, 0, 0);
-    const entriesToday = entries.filter(entry => {
-      const entryDate = new Date(entry.createdAt);
-      entryDate.setHours(0, 0, 0, 0);
-      return entryDate.getTime() === today.getTime();
-    });
+    // const today = new Date();
+    // today.setHours(0, 0, 0, 0);
+    // const entriesToday = entries.filter(entry => {
+    //   const entryDate = new Date(entry.createdAt);
+    //   entryDate.setHours(0, 0, 0, 0);
+    //   return entryDate.getTime() === today.getTime();
+    // });
 
     // console.log(entriesToday);
-    return res.status(200).json({ entries: entriesToday });
+    return res.status(200).json({ entries: entries });
   } catch (error) {
     // console.error("Error fetching hydration entries:", error);
     return res.status(500).json({ message: error.message });
@@ -561,7 +561,7 @@ const getDietReport = async (req, res) => {
   const end  = req.body['end']
   try {
     const form = new FormData();
-    form.append("type", 1);
+    form.append("type", 4);
     form.append("user_id", id);
     // form.append("start", "2024-01-18T12:27:43.961+00:00");
     form.append("start",start)
@@ -574,7 +574,7 @@ const getDietReport = async (req, res) => {
       {
         responseType: 'arraybuffer',
         timeout: 25000
-      } // Set responseType to 'arraybuffer'
+      }
     );
 
     res.status(200).end(await response.data, 'binary');
@@ -600,6 +600,7 @@ const registerPushNotification = async (req, res) => {
     return res.status(500).json({ message: error.message });
   }
 }
+
 const saveTicket = async (req, res) => {
   try {
     const { title, content } = req.body;
