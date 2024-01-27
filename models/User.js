@@ -53,6 +53,9 @@ const UserSchema = new mongoose.Schema(
     ostatus : {
       type : Number,
     },
+    points:{
+      type: Number,
+    },
   },
   {
     timestamps: true,

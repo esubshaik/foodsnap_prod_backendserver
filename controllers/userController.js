@@ -15,7 +15,7 @@ const hydrateentry = require("../models/Hydration");
 
 const signup = async (req, res) => {
   try {
-    const { name, email, phone, password, age, height, weight, gender, location, pstatus, astatus, nstatus, fstatus, ostatus, calrange, needs} = req.body;
+    const { name, email, phone, password, age, height, weight, gender, location, pstatus, astatus, nstatus, fstatus, ostatus, calrange, needs,points } = req.body;
     const hasNumber = /\d/;
     const hasSpecialCharacter = /[!@#$%^&*()_+{}\[\]:;<>,.?~\\-]/;
     const hasUpperCase = /[A-Z]/;
@@ -41,6 +41,7 @@ const signup = async (req, res) => {
       return res.status(409).json({ message: "User already exists" });
     }
     const hashedPassword = await bcrypt.hash(req.body.password, 10);
+    req.body.points = 0 ;
     req.body.password = hashedPassword;
     const newUser = await User.create(req.body);
     return res.status(200).json({ message: "User registered", user: newUser });
@@ -296,11 +297,24 @@ const addNutriData = async (req, res) => {
     const newEntry = new nutrientry({
       foodname: food_name,
       nutridata: nutridata,
-      user: req.userId
+      user: req.userId,
     });
 
+    const userId = req.userId; 
+    const incrementValue = 5;
+    const result = await User.findByIdAndUpdate(
+      userId,
+      { $inc: { points: incrementValue } },
+      { new: true }
+    );
+
     await newEntry.save();
-    return res.status(200).json({ message: "Nutrition Info Recorded" });
+    if (result){
+      return res.status(200).json({ message: "Nutrition Info Recorded" });
+    }
+    else{
+      return res.status(400).json({message: "Error in points calculation"});
+    }
   }
   catch (error) {
     return res.status(500).json({ message: error.message });
@@ -328,6 +342,14 @@ const getNutriData = async (req, res) => {
     return res.status(200).json({ entries: entriesToday, allentries: allentries });
   } catch (error) {
     // console.error("Error fetching entries:", error);
+    return res.status(500).json({ message: error.message });
+  }
+};
+const getUsers = async (req, res) => {
+  try {
+    const users = await User.find();
+    return res.status(200).json({ users: users });
+  } catch (error) {
     return res.status(500).json({ message: error.message });
   }
 };
@@ -430,7 +452,7 @@ function calculateMacronutrients(totalCalories) {
 }
 
 const updateProfile = async (req, res) => {
-  const { age, height, weight, gender, location,activityfactor } = req.body;
+  const { age, height, weight, gender, location, activityfactor } = req.body;
   const id = req.userId;
   let c_gender = "";
   if (gender == "male") {
@@ -444,21 +466,21 @@ const updateProfile = async (req, res) => {
     const mincalperday = minMax.data['min_calories'];
     const maxcalperday = minMax.data['max_calories'];
     const calrange = mincalperday + " - " + maxcalperday;
-    let af = 0 ;
-    if (activityfactor == 0){
-      af = 1.2 ;
+    let af = 0;
+    if (activityfactor == 0) {
+      af = 1.2;
     }
-    else if (activityfactor == 1){
-      af = 1.375 ;
+    else if (activityfactor == 1) {
+      af = 1.375;
     }
-    else if (activityfactor == 2){
-      af = 1.55 ;
+    else if (activityfactor == 2) {
+      af = 1.55;
     }
-    else if (activityfactor == 3){
-      af = 1.725 ;
+    else if (activityfactor == 3) {
+      af = 1.725;
     }
     else if (activityfactor == 4) {
-      af = 1.9 ;
+      af = 1.9;
     }
 
     // const sedentaryFactor = 1.2;
@@ -468,8 +490,8 @@ const updateProfile = async (req, res) => {
     // const extremelyActiveFactor = 1.9;
 
     const req_cal = calculateCalories(age, weight, height, gender, af);
-    const [fatc,protc,carbc] = calculateMacronutrients(req_cal) ;
-    const needs = [req_cal,fatc,protc,carbc] ;
+    const [fatc, protc, carbc] = calculateMacronutrients(req_cal);
+    const needs = [req_cal, fatc, protc, carbc];
     const updatedEntry = await User.findByIdAndUpdate(id, {
       age,
       height,
@@ -557,15 +579,15 @@ const getmoreDescription = async (req, res) => {
 }
 const getDietReport = async (req, res) => {
   const id = req.userId;
-  const start  = req.body['start']
-  const end  = req.body['end']
+  const start = req.body['start']
+  const end = req.body['end']
   try {
     const form = new FormData();
     form.append("type", 4);
     form.append("user_id", id);
     // form.append("start", "2024-01-18T12:27:43.961+00:00");
-    form.append("start",start)
-    form.append("end",end);
+    form.append("start", start)
+    form.append("end", end);
     // form.append("end", "2024-01-19T07:28:53.443+00:00");
 
     const response = await axios.post(
@@ -715,5 +737,6 @@ module.exports = {
   getDietReport,
   saveTicket,
   getTicket,
-  updateFullProfile
+  updateFullProfile,
+  getUsers
 };
