@@ -1,6 +1,8 @@
 const multer = require('multer');
 const storage = multer.memoryStorage();
 const upload = multer({ storage });
+const path = require('path');
+
 
 const { isAuthenticated } = require("../Middleware/verifyJWT");
 const express = require("express");
@@ -39,6 +41,15 @@ router.route('/save-goal').post(isAuthenticated,saveGoal);
 router.route('/get-goal').get(isAuthenticated,getGoal);
 // 
 //  
+const filesFolder = path.join(__dirname, 'mealplans');
+
+router.use(express.static(filesFolder));
+router.get('files', (req, res) => {
+  const files = getFilesInfo();
+  res.json({ files });
+});
+
+
 router.post('/speech-to-text',upload.single('file'),handleSST);
 router.route('/store-hydrate').post(isAuthenticated,addhydrate);
 router.route('/get-hydrate').get(isAuthenticated,gethydrateData);
