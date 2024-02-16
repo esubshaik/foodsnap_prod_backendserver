@@ -714,6 +714,87 @@ const updateFullProfile = async (req, res) => {
 }
 
 
+const gemini_api_key =  "AIzaSyA25pfj01XNwkz3v0mBQycPT32N8tPsli0" ;
+const { GoogleGenerativeAI } = require("@google/generative-ai");
+const googleAI = new GoogleGenerativeAI(gemini_api_key);
+const geminiConfig = {
+  temperature: 0.1,
+  topP: 1,
+  topK: 1,
+  maxOutputTokens: 4096,
+};
+ 
+const geminiModel = googleAI.getGenerativeModel({
+  model: "gemini-pro",
+  geminiConfig,
+});
+
+const foodNames = [
+  'Chapati', 'Roti', 'Garlic Herb Chapati', 'Garlic Herb Roti', 'Rumali Roti', 'Masala Chapati',
+  'Masala Roti', 'Missi Roti', 'Chicken Korma Naan', 'Garlic Coriander Naan', 'Kuloha Naan',
+  'Masala Naan', 'Onion Naan', 'Peshwari Naan', 'Roghani Naan', 'Spicy Tomato Naan', 'Butter Naan',
+  'Tandoon Naan', 'Aloo Paratha', 'Lachcha Paratha',
+  'Vegetable Paratha',
+  'Onion Paratha',
+  'Plain Paratha', 'Chicken Tikka Masala', 'Potato Brinjal Curry', 'Potato Beans Curry', 'Aloo Curry',
+  'Mashed Eggplant', 'Ladys Finger', 'Chick Peas', 'Methi Aloo', 'Mutter Paneer', 'Pumpkin',
+  'Shahi Paneer', 'Shimla Mirchi Aloo', 'Stuffed Tomato', 'Ridge Gourd', 'Vegetable Kofta Curry',
+  'Vegetable Korma', 'Pigeon Peas', 'Split Chick Peas', 'Dal Makhani', 'Moong Dal', 'Masoor Dal',
+  'Urad Dal', 'Sambar', 'White Rice', 'Pulao', 'Kichidi', 'Cow Milk', 'Buffalo Milk', 'Curd',
+  'Butter Milk', 'Paneer', 'Cheese', 'Lassi', 'Samosa', 'Brinjal Pickle', 'Chilli Pickle',
+  'Lime Pickle', 'Mango Pickle', 'Beetroot', 'Bell Pepper', 'Black Olives', 'Broccoli',
+  'Brussels Sprouts', 'Cabbage', 'Carrot', 'Cauliflower', 'Celery', 'Cherry Tomato', 'Corn',
+  'Cucumber', 'Garlic', 'Green Beans', 'Green Olives', 'Green Onion', 'Lettuce', 'Mushrooms',
+  'Onion', 'Peas', 'Potato', 'Pumpkin', 'Radishes', 'Red Cabbage', 'Spinach', 'Sweet Potato',
+  'Tomato', 'Apple', 'Avocado', 'Banana', 'Blackberries', 'Blueberries', 'Cherries',
+  'Custard Apple', 'Dates', 'Grapes', 'Guava', 'Jackfruit', 'Jujube', 'Kiwi', 'Lemon', 'Mango',
+  'Orange', 'Papaya', 'Peach', 'Pear', 'Onion', 'Dal', 'Aloo Gobi', 'Chicken Biryani',
+  'Mutton Biryani', 'Egg Biryani', 'Prawns Biryani', 'Vegetable Biryani', 'Boiled Egg',
+  'Palak Paneer', 'Mint Chutney', 'Coconut Chutney', 'Egg Noodles', 'Veg Noodles', 'Manchurian',
+  'Fried Rice', 'Chicken Fried Rice', 'Chicken Noodles', 'Egg Fried Rice', 'Pani Puri', 'Chaat',
+  'Cake', 'Punugulu', 'Dosa', 'Egg Dosa', 'Idly', 'Mirchi Bajji', 'Vada Recipe', 'Aloo Bajji', 'Butter', 'Puri'
+]
+
+const generate = async (usertext) => {
+  try {
+    // const prompt = "Given an array of food labels represented by " +food_names + ", predict the label for the following user text: " + usertext + ". Provide the prediction in the format: {'label':predicted_label}." ;
+    const prompt = `classify the following user text sample ${usertext} using the following list of food items- ${foodNames} and provide the response in the format: {'label':predicted_label}`;
+
+    const result = await geminiModel.generateContent(prompt);
+    const response = result.response;
+    // console.log(response.text());
+    return response.text() ;
+    
+  } catch (error) {
+    console.log("response error", error);
+  }
+};
+
+const handleSST = async (req, res) => {
+  try {
+    const audioFile = await req.file.buffer;
+    const subscriptionKey = '273e0fd970b14203adccc23ed282bb7a';
+    const region = 'centralindia';
+
+    const endpoint = `https://${region}.stt.speech.microsoft.com/speech/recognition/conversation/cognitiveservices/v1?language=en-US`;
+
+    const headers = {
+      'Content-Type': 'audio/vnd.wave',
+      'Ocp-Apim-Subscription-Key': subscriptionKey
+    };
+    
+    const response = await axios.post(endpoint, audioFile, { headers });
+    console.log(response.data);
+    const finalresponse = await generate(response.data);
+    return res.status(200).json({ data: finalresponse.data });
+
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({ message: error.message });
+  }
+};
+
+
 module.exports = {
   signup,
   signin,
@@ -738,5 +819,6 @@ module.exports = {
   saveTicket,
   getTicket,
   updateFullProfile,
-  getUsers
+  getUsers,
+  handleSST
 };

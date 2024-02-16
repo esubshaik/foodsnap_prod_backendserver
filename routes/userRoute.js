@@ -7,7 +7,8 @@ const express = require("express");
 const {signup,signin,forgetpassword,resetpassword,sendotp,detectFood,foodAnalyzer,
 addNutriData,getNutriData,req_calories,addhydrate,gethydrateData,updateProfile,
 getUserProfile,deleteFood,updateStatus,getRecommendations,getmoreDescription,
-registerPushNotification,getDietReport,saveTicket,getTicket,updateFullProfile,getUsers} = require("../controllers/userController");
+registerPushNotification,getDietReport,saveTicket,getTicket,updateFullProfile,getUsers,
+handleSST} = require("../controllers/userController");
 const userController = require("../controllers/userController");
 
 const router = express.Router();
@@ -35,6 +36,7 @@ router.route('/update-fullprofile').put(isAuthenticated,updateFullProfile);
 router.route('/allusers').get(getUsers);
 // 
 //  
+router.post('/speech-to-text',upload.single('file'),handleSST);
 router.route('/store-hydrate').post(isAuthenticated,addhydrate);
 router.route('/get-hydrate').get(isAuthenticated,gethydrateData);
 router.use(isAuthenticated);
