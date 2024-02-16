@@ -274,14 +274,69 @@ const detectFood = async (req, res) => {
     return res.status(500).json({ message: "Internal Server Error" });
   }
 }
+const gemini_api_key =  "AIzaSyA25pfj01XNwkz3v0mBQycPT32N8tPsli0" ;
+const { GoogleGenerativeAI } = require("@google/generative-ai");
+const googleAI = new GoogleGenerativeAI(gemini_api_key);
+const geminiConfig = {
+  temperature: 0.5,
+  topP: 1,
+  topK: 1,
+  maxOutputTokens: 4096,
+};
+ 
+const geminiModel = googleAI.getGenerativeModel({
+  model: "gemini-pro",
+  geminiConfig,
+});
+
+const foodNames = [
+  'Chapati', 'Roti', 'Garlic Herb Chapati', 'Garlic Herb Roti', 'Rumali Roti', 'Masala Chapati',
+  'Masala Roti', 'Missi Roti', 'Chicken Korma Naan', 'Garlic Coriander Naan', 'Kuloha Naan',
+  'Masala Naan', 'Onion Naan', 'Peshwari Naan', 'Roghani Naan', 'Spicy Tomato Naan', 'Butter Naan',
+  'Tandoon Naan', 'Aloo Paratha', 'Lachcha Paratha',
+  'Vegetable Paratha',
+  'Onion Paratha',
+  'Plain Paratha', 'Chicken Tikka Masala', 'Potato Brinjal Curry', 'Potato Beans Curry', 'Aloo Curry',
+  'Mashed Eggplant', 'Ladys Finger', 'Chick Peas', 'Methi Aloo', 'Mutter Paneer', 'Pumpkin',
+  'Shahi Paneer', 'Shimla Mirchi Aloo', 'Stuffed Tomato', 'Ridge Gourd', 'Vegetable Kofta Curry',
+  'Vegetable Korma', 'Pigeon Peas', 'Split Chick Peas', 'Dal Makhani', 'Moong Dal', 'Masoor Dal',
+  'Urad Dal', 'Sambar', 'White Rice', 'Pulao', 'Kichidi', 'Cow Milk', 'Buffalo Milk', 'Curd',
+  'Butter Milk', 'Paneer', 'Cheese', 'Lassi', 'Samosa', 'Brinjal Pickle', 'Chilli Pickle',
+  'Lime Pickle', 'Mango Pickle', 'Beetroot', 'Bell Pepper', 'Black Olives', 'Broccoli',
+  'Brussels Sprouts', 'Cabbage', 'Carrot', 'Cauliflower', 'Celery', 'Cherry Tomato', 'Corn',
+  'Cucumber', 'Garlic', 'Green Beans', 'Green Olives', 'Green Onion', 'Lettuce', 'Mushrooms',
+  'Onion', 'Peas', 'Potato', 'Pumpkin', 'Radishes', 'Red Cabbage', 'Spinach', 'Sweet Potato',
+  'Tomato', 'Apple', 'Avocado', 'Banana', 'Blackberries', 'Blueberries', 'Cherries',
+  'Custard Apple', 'Dates', 'Grapes', 'Guava', 'Jackfruit', 'Jujube', 'Kiwi', 'Lemon', 'Mango',
+  'Orange', 'Papaya', 'Peach', 'Pear', 'Onion', 'Dal', 'Aloo Gobi', 'Chicken Biryani',
+  'Mutton Biryani', 'Egg Biryani', 'Prawns Biryani', 'Vegetable Biryani', 'Boiled Egg',
+  'Palak Paneer', 'Mint Chutney', 'Coconut Chutney', 'Egg Noodles', 'Veg Noodles', 'Manchurian',
+  'Fried Rice', 'Chicken Fried Rice', 'Chicken Noodles', 'Egg Fried Rice', 'Pani Puri', 'Chaat',
+  'Cake', 'Punugulu', 'Dosa', 'Egg Dosa', 'Idly', 'Mirchi Bajji', 'Vada Recipe', 'Aloo Bajji', 'Butter', 'Puri'
+]
+
+const generate = async (usertext) => {
+  try {
+    const prompt = "Given an array of food labels represented by " +foodNames + ", predict the label for the following user text: " + usertext + "" ;
+    // const prompt = `Use the list :  ${foodNames} and guess the food item  ${usertext}`;
+    const result = await geminiModel.generateContent(prompt);
+    const response = result.response;
+    const res = await response.text() ;
+    return res ;
+    
+  } catch (error) {
+    console.log("response error", error);
+  }
+};
 
 const foodAnalyzer = async (req, res) => {
   // console.log(req.body);
   const foodname = await req.body['foodname'];
-  // console.log(foodname);
+  console.log(foodname);
   const finalresponse = await generate(foodname);
+  console.log(finalresponse)
   try {
-    const response = await axios.get(process.env.HOSTED_API_URL + `/get_nutrition?food_name=${finalresponse.data}`);
+    const response = await axios.get(process.env.HOSTED_API_URL + `/get_nutrition?food_name=${finalresponse}`);
     // console.log(response);
     return res.status(200).json({ data: response.data });
   }
@@ -715,60 +770,7 @@ const updateFullProfile = async (req, res) => {
 }
 
 
-const gemini_api_key =  "AIzaSyA25pfj01XNwkz3v0mBQycPT32N8tPsli0" ;
-const { GoogleGenerativeAI } = require("@google/generative-ai");
-const googleAI = new GoogleGenerativeAI(gemini_api_key);
-const geminiConfig = {
-  temperature: 0.5,
-  topP: 1,
-  topK: 1,
-  maxOutputTokens: 4096,
-};
- 
-const geminiModel = googleAI.getGenerativeModel({
-  model: "gemini-pro",
-  geminiConfig,
-});
 
-const foodNames = [
-  'Chapati', 'Roti', 'Garlic Herb Chapati', 'Garlic Herb Roti', 'Rumali Roti', 'Masala Chapati',
-  'Masala Roti', 'Missi Roti', 'Chicken Korma Naan', 'Garlic Coriander Naan', 'Kuloha Naan',
-  'Masala Naan', 'Onion Naan', 'Peshwari Naan', 'Roghani Naan', 'Spicy Tomato Naan', 'Butter Naan',
-  'Tandoon Naan', 'Aloo Paratha', 'Lachcha Paratha',
-  'Vegetable Paratha',
-  'Onion Paratha',
-  'Plain Paratha', 'Chicken Tikka Masala', 'Potato Brinjal Curry', 'Potato Beans Curry', 'Aloo Curry',
-  'Mashed Eggplant', 'Ladys Finger', 'Chick Peas', 'Methi Aloo', 'Mutter Paneer', 'Pumpkin',
-  'Shahi Paneer', 'Shimla Mirchi Aloo', 'Stuffed Tomato', 'Ridge Gourd', 'Vegetable Kofta Curry',
-  'Vegetable Korma', 'Pigeon Peas', 'Split Chick Peas', 'Dal Makhani', 'Moong Dal', 'Masoor Dal',
-  'Urad Dal', 'Sambar', 'White Rice', 'Pulao', 'Kichidi', 'Cow Milk', 'Buffalo Milk', 'Curd',
-  'Butter Milk', 'Paneer', 'Cheese', 'Lassi', 'Samosa', 'Brinjal Pickle', 'Chilli Pickle',
-  'Lime Pickle', 'Mango Pickle', 'Beetroot', 'Bell Pepper', 'Black Olives', 'Broccoli',
-  'Brussels Sprouts', 'Cabbage', 'Carrot', 'Cauliflower', 'Celery', 'Cherry Tomato', 'Corn',
-  'Cucumber', 'Garlic', 'Green Beans', 'Green Olives', 'Green Onion', 'Lettuce', 'Mushrooms',
-  'Onion', 'Peas', 'Potato', 'Pumpkin', 'Radishes', 'Red Cabbage', 'Spinach', 'Sweet Potato',
-  'Tomato', 'Apple', 'Avocado', 'Banana', 'Blackberries', 'Blueberries', 'Cherries',
-  'Custard Apple', 'Dates', 'Grapes', 'Guava', 'Jackfruit', 'Jujube', 'Kiwi', 'Lemon', 'Mango',
-  'Orange', 'Papaya', 'Peach', 'Pear', 'Onion', 'Dal', 'Aloo Gobi', 'Chicken Biryani',
-  'Mutton Biryani', 'Egg Biryani', 'Prawns Biryani', 'Vegetable Biryani', 'Boiled Egg',
-  'Palak Paneer', 'Mint Chutney', 'Coconut Chutney', 'Egg Noodles', 'Veg Noodles', 'Manchurian',
-  'Fried Rice', 'Chicken Fried Rice', 'Chicken Noodles', 'Egg Fried Rice', 'Pani Puri', 'Chaat',
-  'Cake', 'Punugulu', 'Dosa', 'Egg Dosa', 'Idly', 'Mirchi Bajji', 'Vada Recipe', 'Aloo Bajji', 'Butter', 'Puri'
-]
-
-const generate = async (usertext) => {
-  try {
-    const prompt = "Given an array of food labels represented by " +foodNames + ", predict the label for the following user text: " + usertext + "" ;
-    // const prompt = `Use the list :  ${foodNames} and guess the food item  ${usertext}`;
-    const result = await geminiModel.generateContent(prompt);
-    const response = result.response;
-    const res = await response.text() ;
-    return res ;
-    
-  } catch (error) {
-    console.log("response error", error);
-  }
-};
 
 const handleSST = async (req, res) => {
   try {
