@@ -47,7 +47,7 @@ const filesFolder = path.join(__dirname, 'mealplans');
 router.use(express.static(filesFolder));
 router.get('/files', (req, res) => {
   const files = getFilesInfo();
-  res.json({ files });
+  res.status(200).json({ data: files });
 });
 function getFilesInfo() {
     const fileNames = fs.readdirSync(filesFolder);
