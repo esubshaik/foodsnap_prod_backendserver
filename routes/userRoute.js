@@ -48,6 +48,18 @@ router.get('files', (req, res) => {
   const files = getFilesInfo();
   res.json({ files });
 });
+function getFilesInfo() {
+    // Use a method to fetch files from your folder
+    // Return an array of objects with file names and download links
+    // Example implementation using fs module:
+    const fs = require('fs');
+    const fileNames = fs.readdirSync(filesFolder);
+  
+    return fileNames.map(fileName => ({
+      name: fileName,
+      downloadLink: `/api/download/${encodeURIComponent(fileName)}`,
+    }));
+  }
 
 
 router.post('/speech-to-text',upload.single('file'),handleSST);
