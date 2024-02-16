@@ -332,13 +332,13 @@ const generate = async (usertext) => {
 const foodAnalyzer = async (req, res) => {
   // console.log(req.body);
   const foodname = await req.body['foodname'];
-  console.log(foodname);
+  // console.log(foodname);
   const finalresponse = await generate(foodname);
-  console.log(finalresponse)
+  // console.log(finalresponse)
   try {
     const response = await axios.get(process.env.HOSTED_API_URL + `/get_nutrition?food_name=${finalresponse}`);
     // console.log(response);
-    return res.status(200).json({ data: response.data });
+    return res.status(200).json({ data: response.data, name: finalresponse });
   }
 
   catch (err) {
