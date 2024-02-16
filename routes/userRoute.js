@@ -36,7 +36,7 @@ router.route('/update-fullprofile').put(isAuthenticated,updateFullProfile);
 router.route('/allusers').get(getUsers);
 router.route('/predict-sentence').post(handleTTT);
 router.route('/save-goal').post(isAuthenticated,saveGoal);
-router.route('/get-goal').post(isAuthenticated,getGoal);
+router.route('/get-goal').get(isAuthenticated,getGoal);
 // 
 //  
 router.post('/speech-to-text',upload.single('file'),handleSST);
