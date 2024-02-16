@@ -8,7 +8,7 @@ const {signup,signin,forgetpassword,resetpassword,sendotp,detectFood,foodAnalyze
 addNutriData,getNutriData,req_calories,addhydrate,gethydrateData,updateProfile,
 getUserProfile,deleteFood,updateStatus,getRecommendations,getmoreDescription,
 registerPushNotification,getDietReport,saveTicket,getTicket,updateFullProfile,getUsers,
-handleSST} = require("../controllers/userController");
+handleSST, handleTTT} = require("../controllers/userController");
 const userController = require("../controllers/userController");
 
 const router = express.Router();
@@ -34,6 +34,7 @@ router.route('/support-request').post(isAuthenticated,saveTicket);
 router.route('/support-request').get(isAuthenticated,getTicket);
 router.route('/update-fullprofile').put(isAuthenticated,updateFullProfile);
 router.route('/allusers').get(getUsers);
+router.route('/predict-sentence').post(handleTTT);
 // 
 //  
 router.post('/speech-to-text',upload.single('file'),handleSST);

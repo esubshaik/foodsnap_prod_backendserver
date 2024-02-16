@@ -718,7 +718,7 @@ const gemini_api_key =  "AIzaSyA25pfj01XNwkz3v0mBQycPT32N8tPsli0" ;
 const { GoogleGenerativeAI } = require("@google/generative-ai");
 const googleAI = new GoogleGenerativeAI(gemini_api_key);
 const geminiConfig = {
-  temperature: 0.1,
+  temperature: 0.5,
   topP: 1,
   topK: 1,
   maxOutputTokens: 4096,
@@ -757,13 +757,12 @@ const foodNames = [
 
 const generate = async (usertext) => {
   try {
-    // const prompt = "Given an array of food labels represented by " +food_names + ", predict the label for the following user text: " + usertext + ". Provide the prediction in the format: {'label':predicted_label}." ;
-    const prompt = `classify the following user text sample ${usertext} using the following list of food items- ${foodNames} and provide the response in the format: {'label':predicted_label}`;
-
+    const prompt = "Given an array of food labels represented by " +foodNames + ", predict the label for the following user text: " + usertext + "" ;
+    // const prompt = `Use the list :  ${foodNames} and guess the food item  ${usertext}`;
     const result = await geminiModel.generateContent(prompt);
     const response = result.response;
-    // console.log(response.text());
-    return response.text() ;
+    const res = await response.text() ;
+    return res ;
     
   } catch (error) {
     console.log("response error", error);
@@ -785,14 +784,28 @@ const handleSST = async (req, res) => {
     
     const response = await axios.post(endpoint, audioFile, { headers });
     console.log(response.data);
-    const finalresponse = await generate(response.data);
-    return res.status(200).json({ data: finalresponse.data });
+    return res.status(200).json({ data: response.data });
 
   } catch (error) {
     console.error(error);
     return res.status(500).json({ message: error.message });
   }
 };
+
+const handleTTT = async(req,res)=>{
+  try {
+   const {sentence} = req.body ;
+   console.log(sentence);
+    const finalresponse = await generate(sentence);
+    return res.status(200).json({ data: finalresponse });
+
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({ message: error.message });
+  }
+}
+
+
 
 
 module.exports = {
@@ -820,5 +833,6 @@ module.exports = {
   getTicket,
   updateFullProfile,
   getUsers,
-  handleSST
+  handleSST,
+  handleTTT
 };
