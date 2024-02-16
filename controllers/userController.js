@@ -6,6 +6,7 @@ const nodemailer = require("nodemailer");
 const axios = require('axios');
 const nutrientry = require("../models/StoreNutri");
 const ticketentry = require("../models/tickets");
+const goalentry = require("..models/Goals");
 const randomstring = require('randomstring');
 require("dotenv").config();
 const _email = process.env.EMAIL
@@ -539,11 +540,6 @@ const updateProfile = async (req, res) => {
       af = 1.9;
     }
 
-    // const sedentaryFactor = 1.2;
-    // const lightlyActiveFactor = 1.375;
-    // const moderatelyActiveFactor = 1.55;
-    // const veryActiveFactor = 1.725;
-    // const extremelyActiveFactor = 1.9;
 
     const req_cal = calculateCalories(age, weight, height, gender, af);
     const [fatc, protc, carbc] = calculateMacronutrients(req_cal);
@@ -808,8 +804,41 @@ const handleTTT = async(req,res)=>{
   }
 }
 
+const saveGoal = async (req, res) => {
+  try {
+    const {name, active, variation,days, target} = req.body;
+    const newEntry = new goalentry({
+      goal: name,
+      activity: active,
+      variation: variation,
+      days: days,
+      target : target,
+      user: req.userId
+    });
+    await newEntry.save();
+    return res.status(200).json({ message: "Goal Set Successfully" });
+  }
+  catch (error) {
+    return res.status(500).json({ message: error.message });
+  }
+}
 
-
+const getGoal = async (req, res) => {
+  try {
+    const id = req.userId;
+    const goaldata = await User.findById(id).populate("goalsentries"); // Populate the user's entries
+    const entries = goaldata.goalsentries;
+    console.log(entries);
+    const createdDate = entries.createdAt ;
+    const currentDate = new Date();
+    const progress = Math.floor((currentDate - createdDate) / (1000 * 60 * 60 * 24));
+    
+    return res.status(200).json({ goal: entries , progress: progress});
+  }
+  catch (error) {
+    return res.status(500).json({ message: error.message });
+  }
+}
 
 module.exports = {
   signup,
@@ -837,5 +866,7 @@ module.exports = {
   updateFullProfile,
   getUsers,
   handleSST,
-  handleTTT
+  handleTTT,
+  saveGoal,
+  getGoal
 };

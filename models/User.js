@@ -84,6 +84,10 @@ UserSchema.virtual("ticketentries", {
   localField: "_id",
   foreignField: "user",
 });
-
+UserSchema.virtual("goalsentries", {
+  ref: "goalsentry",
+  localField: "_id",
+  foreignField: "user",
+});
 
 module.exports = mongoose.model("User", UserSchema);
