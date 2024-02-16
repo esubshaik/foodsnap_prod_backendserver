@@ -6,7 +6,7 @@ const nodemailer = require("nodemailer");
 const axios = require('axios');
 const nutrientry = require("../models/StoreNutri");
 const ticketentry = require("../models/tickets");
-const goalentry = require("..models/Goals");
+const goalentry = require("../models/Goals");
 const randomstring = require('randomstring');
 require("dotenv").config();
 const _email = process.env.EMAIL
