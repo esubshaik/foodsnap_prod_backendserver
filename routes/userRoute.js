@@ -2,7 +2,7 @@ const multer = require('multer');
 const storage = multer.memoryStorage();
 const upload = multer({ storage });
 const path = require('path');
-
+const fs = require('fs');
 
 const { isAuthenticated } = require("../Middleware/verifyJWT");
 const express = require("express");
@@ -39,25 +39,21 @@ router.route('/allusers').get(getUsers);
 router.route('/predict-sentence').post(handleTTT);
 router.route('/save-goal').post(isAuthenticated,saveGoal);
 router.route('/get-goal').get(isAuthenticated,getGoal);
+
 // 
 //  
 const filesFolder = path.join(__dirname, 'mealplans');
 
 router.use(express.static(filesFolder));
-router.get('files', (req, res) => {
+router.get('/files', (req, res) => {
   const files = getFilesInfo();
   res.json({ files });
 });
 function getFilesInfo() {
-    // Use a method to fetch files from your folder
-    // Return an array of objects with file names and download links
-    // Example implementation using fs module:
-    const fs = require('fs');
     const fileNames = fs.readdirSync(filesFolder);
-  
     return fileNames.map(fileName => ({
       name: fileName,
-      downloadLink: `/api/download/${encodeURIComponent(fileName)}`,
+      downloadLink: `/download/${encodeURIComponent(fileName)}`,
     }));
   }
 
