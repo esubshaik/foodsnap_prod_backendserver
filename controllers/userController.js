@@ -404,8 +404,9 @@ const getNutriData = async (req, res) => {
 };
 const getUsers = async (req, res) => {
   try {
-    const users = await User.find();
-    return res.status(200).json({ users: users });
+    const users = await User.find().exec();
+   const sortedUsers =  users.sort((a, b) => b.points - a.points);
+    return res.status(200).json({ users: sortedUsers });
   } catch (error) {
     return res.status(500).json({ message: error.message });
   }
