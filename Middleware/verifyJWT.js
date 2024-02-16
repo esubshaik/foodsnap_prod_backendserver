@@ -3,7 +3,7 @@ const  StatusCodes= require("http-status-codes");
 const isAuthenticated =async (req, res, next) => {
   
     const authHeader = req.headers.authorization;
-    next();
+
     if (!authHeader || !authHeader.startsWith("Bearer ")) {
       return res.status(StatusCodes.BAD_REQUEST).json({Error: "Please provide bearer token"});
     }
@@ -15,6 +15,7 @@ const isAuthenticated =async (req, res, next) => {
       const payload = jwt.verify(token, process.env.ACCESS_TOKEN_SECRET);
       req.userId = payload.userId;
       req.role = payload.role;
+      next();
      
     } catch (error) {
         // console.log(error)
