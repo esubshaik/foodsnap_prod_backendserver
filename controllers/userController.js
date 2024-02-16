@@ -279,8 +279,9 @@ const foodAnalyzer = async (req, res) => {
   // console.log(req.body);
   const foodname = await req.body['foodname'];
   // console.log(foodname);
+  const finalresponse = await generate(foodname);
   try {
-    const response = await axios.get(process.env.HOSTED_API_URL + `/get_nutrition?food_name=${foodname}`);
+    const response = await axios.get(process.env.HOSTED_API_URL + `/get_nutrition?food_name=${finalresponse.data}`);
     // console.log(response);
     return res.status(200).json({ data: response.data });
   }
@@ -795,7 +796,7 @@ const handleSST = async (req, res) => {
 const handleTTT = async(req,res)=>{
   try {
    const {sentence} = req.body ;
-   console.log(sentence);
+  //  console.log(sentence);
     const finalresponse = await generate(sentence);
     return res.status(200).json({ data: finalresponse });
 
