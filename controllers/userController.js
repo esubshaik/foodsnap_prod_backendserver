@@ -806,22 +806,36 @@ const handleTTT = async(req,res)=>{
 
 const saveGoal = async (req, res) => {
   try {
-    const {name, active, variation,days, target} = req.body;
+    const { name, active, variation, days, target } = req.body;
+    const userId = req.userId;
+
+    // Fetch user data with populated goalsentries
+    const goalData = await User.findById(userId).populate("goalsentries");
+
     const newEntry = new goalentry({
       goal: name,
       activity: active,
       variation: variation,
       days: days,
-      target : target,
-      user: req.userId
+      target: target,
+      user: userId,
     });
-    await newEntry.save();
+
+    if (goalData._id) {
+      // If an existing entry exists, update it
+      const updateRequest = await goalentry.findByIdAndUpdate(goalData._id, newEntry);
+    } else {
+      // If no existing entry, save a new one
+      await newEntry.save();
+    }
+
     return res.status(200).json({ message: "Goal Set Successfully" });
+  } catch (error) {
+    console.error('Error:', error);
+    return res.status(500).json({ message: "Internal Server Error" });
   }
-  catch (error) {
-    return res.status(500).json({ message: error.message });
-  }
-}
+};
+
 
 const getGoal = async (req, res) => {
   try {
