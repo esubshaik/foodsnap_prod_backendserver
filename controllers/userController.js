@@ -844,7 +844,7 @@ const getGoal = async (req, res) => {
     const currentDate = new Date();
     const progress = Math.floor((currentDate - createdDate) / (1000 * 60 * 60 * 24));
     
-    return res.status(200).json({ goal: entries , progress: progress});
+    return res.status(200).json({ goal: entries[0] , progress: progress});
   }
   catch (error) {
     return res.status(500).json({ message: error.message });
