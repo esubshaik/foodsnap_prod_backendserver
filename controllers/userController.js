@@ -808,10 +808,6 @@ const saveGoal = async (req, res) => {
   try {
     const { name, active, variation, days, target } = req.body;
     const userId = req.userId;
-
-    // Fetch user data with populated goalsentries
-    const goalData = await User.findById(userId).populate("goalsentries");
-
     const newEntry = new goalentry({
       goal: name,
       activity: active,
@@ -820,14 +816,18 @@ const saveGoal = async (req, res) => {
       target: target,
       user: userId,
     });
-console.log(goalData);
-    if (goalData) {
-      const updateRequest = await goalentry.findByIdAndUpdate(goalData._id, newEntry);
-    } 
+    // Fetch user data with populated goalsentries
+    const goaldata = await User.findById(id).populate("goalsentries"); // Populate the user's entries
+    const entries = goaldata.goalsentries;
+
+    
+    console.log(entries);
+    if (entries) {
+      await goalentry.findByIdAndUpdate(entries.id, newEntry);
+    }
     else {
       await newEntry.save();
     }
-
     return res.status(200).json({ message: "Goal Set Successfully" });
   } catch (error) {
     console.error('Error:', error);
