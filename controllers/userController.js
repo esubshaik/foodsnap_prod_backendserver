@@ -822,7 +822,7 @@ const saveGoal = async (req, res) => {
 
     
     console.log(entries);
-    if (entries) {
+    if (entries.length > 0 ) {
       await goalentry.findByIdAndUpdate(entries.id, newEntry);
     }
     else {
