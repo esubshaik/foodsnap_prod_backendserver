@@ -817,7 +817,7 @@ const saveGoal = async (req, res) => {
       user: userId,
     });
     // Fetch user data with populated goalsentries
-    const goaldata = await User.findById(id).populate("goalsentries"); // Populate the user's entries
+    const goaldata = await User.findById(userId).populate("goalsentries"); // Populate the user's entries
     const entries = goaldata.goalsentries;
 
     
