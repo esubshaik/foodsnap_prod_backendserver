@@ -840,7 +840,7 @@ const getGoal = async (req, res) => {
     const goaldata = await User.findById(id).populate("goalsentries"); // Populate the user's entries
     const entries = await goaldata.goalsentries;
     console.log(entries);
-    const createdDate = await entries.updatedAt ;
+    const createdDate = await entries[0].updatedAt ;
     const currentDate = new Date();
     const progress = Math.floor((currentDate - createdDate) / (1000 * 60 * 60 * 24));
     
