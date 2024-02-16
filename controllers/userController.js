@@ -820,12 +820,11 @@ const saveGoal = async (req, res) => {
       target: target,
       user: userId,
     });
-
-    if (goalData._id) {
-      // If an existing entry exists, update it
+console.log(goalData);
+    if (goalData) {
       const updateRequest = await goalentry.findByIdAndUpdate(goalData._id, newEntry);
-    } else {
-      // If no existing entry, save a new one
+    } 
+    else {
       await newEntry.save();
     }
 
