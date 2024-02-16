@@ -53,7 +53,7 @@ function getFilesInfo() {
     const fileNames = fs.readdirSync(filesFolder);
     return fileNames.map(fileName => ({
       name: fileName,
-      downloadLink: `/download/${encodeURIComponent(fileName)}`,
+      downloadLink: `/${encodeURIComponent(fileName)}`,
     }));
   }
 
