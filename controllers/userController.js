@@ -16,7 +16,7 @@ const hydrateentry = require("../models/Hydration");
 
 const signup = async (req, res) => {
   try {
-    const { name, email, phone, password, age, height, weight, gender, location, pstatus, astatus, nstatus, fstatus, ostatus, calrange, needs,points } = req.body;
+    const { name, email, phone, password, age, height, weight, gender, location, pstatus, astatus, nstatus, fstatus, ostatus, calrange, needs,points, issues} = req.body;
     const hasNumber = /\d/;
     const hasSpecialCharacter = /[!@#$%^&*()_+{}\[\]:;<>,.?~\\-]/;
     const hasUpperCase = /[A-Z]/;
@@ -284,7 +284,6 @@ const geminiConfig = {
   topK: 1,
   maxOutputTokens: 4096,
 };
- 
 const geminiModel = googleAI.getGenerativeModel({
   model: "gemini-pro",
   geminiConfig,
@@ -347,11 +346,14 @@ const alertuser = async (foodname,issue) => {
 
 const foodAnalyzer = async (req, res) => {
   // console.log(req.body);
+  const userId = req.userId; 
+  const userDoc  = await User.findById(userId);
   const foodname = await req.body['foodname'];
   // console.log(foodname);
+  const healthissue = await userDoc.issues ;
   const finalresponse = await generate(foodname);
-  // console.log(finalresponse)
-  const alert = await alertuser(finalresponse,"fever");
+  console.log(healthissue);
+  const alert = await alertuser(finalresponse,healthissue);
   try {
     const response = await axios.get(process.env.HOSTED_API_URL + `/get_nutrition?food_name=${finalresponse}`);
     // console.log(response);
@@ -567,7 +569,8 @@ const updateProfile = async (req, res) => {
       gender,
       calrange,
       needs,
-      location
+      location,
+      issues: "None"
     });
     if (updatedEntry) {
       return res.status(200).json({ message: "Profile Updated Successfully" });
@@ -577,6 +580,25 @@ const updateProfile = async (req, res) => {
     return res.status(500).json({ message: error.message });
   }
 }
+
+const updateIssues = async (req, res) => {
+  const { issues } = req.body;
+  const id = req.userId;
+  try {
+    const updatedEntry = await User.findByIdAndUpdate(id, {
+      issues: issues
+    });
+    if (updatedEntry) {
+      return res.status(200).json({ message: "Health Issues Updated Successfully" });
+    }
+  }
+  catch (error) {
+    return res.status(500).json({ message: error.message });
+  }
+}
+
+
+
 const getUserProfile = async (req, res) => {
   try {
     const _id = req.userId;
@@ -901,5 +923,6 @@ module.exports = {
   handleSST,
   handleTTT,
   saveGoal,
-  getGoal
+  getGoal,
+  updateIssues
 };

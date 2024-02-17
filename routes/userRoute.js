@@ -10,7 +10,7 @@ const {signup,signin,forgetpassword,resetpassword,sendotp,detectFood,foodAnalyze
 addNutriData,getNutriData,req_calories,addhydrate,gethydrateData,updateProfile,
 getUserProfile,deleteFood,updateStatus,getRecommendations,getmoreDescription,
 registerPushNotification,getDietReport,saveTicket,getTicket,updateFullProfile,getUsers,
-handleSST, handleTTT,saveGoal,getGoal} = require("../controllers/userController");
+handleSST, handleTTT,saveGoal,getGoal,updateIssues} = require("../controllers/userController");
 const userController = require("../controllers/userController");
 
 const router = express.Router();
@@ -19,7 +19,7 @@ router.route("/login").post(signin);
 router.route("/forgetpassword").post(forgetpassword);
 router.route("/resetpassword/:userId/:accessToken").post(resetpassword);
 router.route('/send-otp').post(sendotp);
-router.route('/analyze-food').post(foodAnalyzer);
+router.route('/analyze-food').post(isAuthenticated,foodAnalyzer);
 router.route('/store-nutridata').post(isAuthenticated,addNutriData);
 router.route('/delete-nutridata').post(deleteFood);
 router.route('/update-profile').put(isAuthenticated,updateProfile);
@@ -38,6 +38,7 @@ router.route('/update-fullprofile').put(isAuthenticated,updateFullProfile);
 router.route('/allusers').get(getUsers);
 router.route('/predict-sentence').post(handleTTT);
 router.route('/save-goal').post(isAuthenticated,saveGoal);
+router.route('/save-issues').post(isAuthenticated,updateIssues);
 router.route('/get-goal').get(isAuthenticated,getGoal);
 // 
 //  

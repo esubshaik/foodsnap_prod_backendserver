@@ -38,6 +38,9 @@ const UserSchema = new mongoose.Schema(
     location : {
       type : String,
     },
+    issues: {
+      type: String,
+    },
     pstatus : {
       type: Number,
     },
