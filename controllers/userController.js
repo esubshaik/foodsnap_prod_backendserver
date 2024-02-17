@@ -602,7 +602,7 @@ const getIssues = async (req, res) => {
   const id = req.userId;
   try {
     const entry = await User.findById(id);
-    if (updatedEntry) {
+    if (entry) {
       return res.status(200).json({ issues: entry.issues  });
     }
   }
