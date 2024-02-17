@@ -317,7 +317,7 @@ const foodNames = [
 
 const generate = async (usertext) => {
   try {
-    const prompt = "Given an array of food labels represented by " +foodNames + ", predict the label for the following user text: " + usertext + "" ;
+    const prompt = "Given an array of food labels represented by " +foodNames + ", predict the exact label from the array for the following user text: " + usertext + "" ;
     // const prompt = `Use the list :  ${foodNames} and guess the food item  ${usertext}`;
     const result = await geminiModel.generateContent(prompt);
     const response = result.response;
@@ -348,12 +348,10 @@ const foodAnalyzer = async (req, res) => {
   // console.log(req.body);
   const userId = req.userId; 
   const userDoc  = await User.findById(userId);
-  console.log(userDoc);
   const foodname = await req.body['foodname'];
-  // console.log(foodname);
+  console.log(foodname);
   const healthissue = await userDoc.issues ;
   const finalresponse = await generate(foodname);
-  console.log(healthissue);
   const alert = await alertuser(finalresponse,healthissue);
   try {
     const response = await axios.get(process.env.HOSTED_API_URL + `/get_nutrition?food_name=${finalresponse}`);
