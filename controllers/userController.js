@@ -821,7 +821,14 @@ const saveGoal = async (req, res) => {
     const entries = goaldata.goalsentries;
     console.log(entries)
     if (entries.length > 0 ) {
-      await goalentry.findByIdAndUpdate(entries[0]._id, newEntry);
+      await goalentry.findByIdAndUpdate(entries[0]._id, {
+        goal: name,
+        activity: active,
+        variation: variation,
+        days: days,
+        target: target,
+        user: userId,
+      });
     }
     else {
       await newEntry.save();
