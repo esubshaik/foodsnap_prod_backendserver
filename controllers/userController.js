@@ -598,6 +598,19 @@ const updateIssues = async (req, res) => {
   }
 }
 
+const getIssues = async (req, res) => {
+  const id = req.userId;
+  try {
+    const entry = await User.findById(id);
+    if (updatedEntry) {
+      return res.status(200).json({ issues: entry.issues  });
+    }
+  }
+  catch (error) {
+    return res.status(500).json({ issues: null });
+  }
+}
+
 
 
 const getUserProfile = async (req, res) => {
@@ -925,5 +938,6 @@ module.exports = {
   handleTTT,
   saveGoal,
   getGoal,
-  updateIssues
+  updateIssues,
+  getIssues
 };
