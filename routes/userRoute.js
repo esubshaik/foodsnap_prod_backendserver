@@ -21,7 +21,7 @@ router.route("/resetpassword/:userId/:accessToken").post(resetpassword);
 router.route('/send-otp').post(sendotp);
 router.route('/analyze-food').post(isAuthenticated,foodAnalyzer);
 router.route('/store-nutridata').post(isAuthenticated,addNutriData);
-router.route('/delete-nutridata').post(deleteFood);
+router.route('/delete-nutridata').post(isAuthenticated,deleteFood);
 router.route('/update-profile').put(isAuthenticated,updateProfile);
 router.route('/get-nutridata').get(isAuthenticated,getNutriData);
 router.post('/detect-my-food',upload.single('image'),detectFood);

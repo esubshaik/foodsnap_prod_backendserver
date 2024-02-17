@@ -627,6 +627,14 @@ const deleteFood = async (req, res) => {
   const foodid = req.body.itemid; // Corrected line
   try {
     await nutrientry.findByIdAndDelete(foodid);
+    const userId = req.userId;
+    const decrementValue = 5;
+    
+    const result = await User.findByIdAndUpdate(
+      userId,
+      { $inc: { points: -decrementValue } },
+      { new: true }
+    );
     return res.status(200).json({ message: 'Successfully deleted.' });
   } catch (err) {
     return res.status(500).json({ message: err.message });
