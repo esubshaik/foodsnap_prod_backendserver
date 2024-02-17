@@ -10,7 +10,7 @@ const {signup,signin,forgetpassword,resetpassword,sendotp,detectFood,foodAnalyze
 addNutriData,getNutriData,req_calories,addhydrate,gethydrateData,updateProfile,
 getUserProfile,deleteFood,updateStatus,getRecommendations,getmoreDescription,
 registerPushNotification,getDietReport,saveTicket,getTicket,updateFullProfile,getUsers,
-handleSST, handleTTT,saveGoal,getGoal,dietNotifier} = require("../controllers/userController");
+handleSST, handleTTT,saveGoal,getGoal} = require("../controllers/userController");
 const userController = require("../controllers/userController");
 
 const router = express.Router();
@@ -39,7 +39,6 @@ router.route('/allusers').get(getUsers);
 router.route('/predict-sentence').post(handleTTT);
 router.route('/save-goal').post(isAuthenticated,saveGoal);
 router.route('/get-goal').get(isAuthenticated,getGoal);
-router.route('/diet-notifier').post(dietNotifier);
 // 
 //  
 const filesFolder = path.join(__dirname, 'mealplans');
