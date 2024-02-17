@@ -43,6 +43,7 @@ const signup = async (req, res) => {
     }
     const hashedPassword = await bcrypt.hash(req.body.password, 10);
     req.body.points = 0 ;
+    req.body.email = email.toLowerCase();
     req.body.issues = "None" ;
     req.body.password = hashedPassword;
     const newUser = await User.create(req.body);
@@ -55,7 +56,8 @@ const signup = async (req, res) => {
 
 const signin = async (req, res) => {
   try {
-    const { email, password } = req.body;
+    const { em, password } = req.body;
+    const email = em.toLowerCase();
     if (!email || !password) {
       return res.status(400).json({ message: "Fill all details" });
     }
@@ -108,15 +110,16 @@ const signin = async (req, res) => {
       return res.status(404).json({ message: "User Not Found" });
     }
   } catch (err) {
-    // console.log(err);
+    console.log(err);
     return res.status(500).json({ message: "Internal Server Error" });
   }
 };
 
 const forgetpassword = async (req, res) => {
   try {
-    const { email } = req.body;
+    const { em } = req.body;
     // console.log(email)
+    const email = em.toLowerCase();
     if (!email) return res.status(400).json({ message: "Fill Email Properly" });
     const isUser = await User.findOne({ email });
 
