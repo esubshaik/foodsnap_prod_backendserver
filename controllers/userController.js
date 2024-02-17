@@ -331,7 +331,7 @@ const generate = async (usertext) => {
 
 const alertuser = async (foodname,issue) => {
   try {
-    const prompt = "I have the following health issues," +issue + ". Is it recommended to eat this food: " + foodname + ". tell me yes/no" ;
+    const prompt = "I have the following health issues, " +issue + ". Is it recommended to eat this food: " + foodname + ". tell me yes/no" ;
     // const prompt = `Use the list :  ${foodNames} and guess the food item  ${usertext}`;
     const result = await geminiModel.generateContent(prompt);
     const response = result.response;
@@ -348,6 +348,7 @@ const foodAnalyzer = async (req, res) => {
   // console.log(req.body);
   const userId = req.userId; 
   const userDoc  = await User.findById(userId);
+  console.log(userDoc);
   const foodname = await req.body['foodname'];
   // console.log(foodname);
   const healthissue = await userDoc.issues ;
