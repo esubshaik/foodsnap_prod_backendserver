@@ -330,16 +330,32 @@ const generate = async (usertext) => {
   }
 };
 
+const alertuser = async (foodname,issue) => {
+  try {
+    const prompt = "I have the following health issues," +issue + ". Is it recommended to eat this food: " + foodname + ". tell me yes/no" ;
+    // const prompt = `Use the list :  ${foodNames} and guess the food item  ${usertext}`;
+    const result = await geminiModel.generateContent(prompt);
+    const response = result.response;
+    const res = await response.text() ;
+    return res ;
+    
+  } catch (error) {
+    console.log("response error", error);
+  }
+};
+
+
 const foodAnalyzer = async (req, res) => {
   // console.log(req.body);
   const foodname = await req.body['foodname'];
   // console.log(foodname);
   const finalresponse = await generate(foodname);
   // console.log(finalresponse)
+  const alert = await alertuser(finalresponse,"fever");
   try {
     const response = await axios.get(process.env.HOSTED_API_URL + `/get_nutrition?food_name=${finalresponse}`);
     // console.log(response);
-    return res.status(200).json({ data: response.data, name: finalresponse });
+    return res.status(200).json({ data: response.data, name: finalresponse , alert: alert});
   }
 
   catch (err) {
@@ -762,7 +778,6 @@ const updateFullProfile = async (req, res) => {
   } catch (err) {
     return res.status(500).json({ message: err.message });
   }
-
 }
 
 
@@ -819,7 +834,7 @@ const saveGoal = async (req, res) => {
     // Fetch user data with populated goalsentries
     const goaldata = await User.findById(userId).populate("goalsentries"); // Populate the user's entries
     const entries = goaldata.goalsentries;
-    console.log(entries)
+    
     if (entries.length > 0 ) {
       await goalentry.findByIdAndUpdate(entries[0]._id, {
         goal: name,
@@ -846,7 +861,7 @@ const getGoal = async (req, res) => {
     const id = req.userId;
     const goaldata = await User.findById(id).populate("goalsentries"); // Populate the user's entries
     const entries = await goaldata.goalsentries;
-    console.log(entries);
+    
     const createdDate = await entries[0].updatedAt ;
     const currentDate = new Date();
     const progress = Math.floor((currentDate - createdDate) / (1000 * 60 * 60 * 24));
