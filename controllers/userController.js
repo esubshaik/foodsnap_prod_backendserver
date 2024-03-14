@@ -915,6 +915,14 @@ const getGoal = async (req, res) => {
     return res.status(500).json({ message: error.message });
   }
 }
+const pingMe = async (req, res) => {
+  try {
+    return res.status(200).json({ message: 'success'});
+  }
+  catch (error) {
+    return res.status(500).json({ message: error.message });
+  }
+}
 
 module.exports = {
   signup,
@@ -946,5 +954,6 @@ module.exports = {
   saveGoal,
   getGoal,
   updateIssues,
-  getIssues
+  getIssues,
+  pingMe
 };
