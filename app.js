@@ -96,6 +96,8 @@ cron.schedule(sundaySchedule, () => {
   sevenDaysAgo.setDate(currentDate.getDate() - 7);
   console.log(currentDate);
   console.log(sevenDaysAgo);
+}, {
+  timezone: 'Asia/Kolkata',
 });
 
 const monthlyFirstTask = cron.schedule(monthlyFirstSchedule, () => {
