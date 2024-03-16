@@ -692,6 +692,8 @@ const getDietReport = async (req, res) => {
   const id = req.userId;
   const start = req.body['start']
   const end = req.body['end']
+  console.log(start);
+  console.log(end) ;
   try {
     const form = new FormData();
     form.append("type", 4);
