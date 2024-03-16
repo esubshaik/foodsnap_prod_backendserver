@@ -85,19 +85,48 @@ mongoose
 
 // Define the cron expressions for each schedule
 // const sundaySchedule = '0 0 * * 0'; // Every Sunday at 12:00 AM
-const sundaySchedule = '42 9 * * *'; // Every Sunday at 12:00 AM
+const sundaySchedule = '48 9 * * *'; // Every Sunday at 12:00 AM
 const monthlyFirstSchedule = '0 0 1 * *'; // Every 1st day of the month at 12:00 AM
 const yearlyJanuaryFirstSchedule = '0 0 1 1 *'; // January 1st at 12:00 AM
 // 2020-08-14T22:30:30.000+00:00
 // Schedule the tasks
 cron.schedule(sundaySchedule, () => {
   let currentDate = new Date();
-  let currentDateString = currentDate.toISOString();
+
+  // Get the date 7 days ago
   let sevenDaysAgo = new Date(currentDate);
   sevenDaysAgo.setDate(currentDate.getDate() - 7);
-  let sevenDaysAgoDateString = sevenDaysAgo.toISOString();
-  console.log(currentDateString);
-  console.log(sevenDaysAgoDateString);
+  
+  // Extract date components for the current date
+  const currentYear = currentDate.getUTCFullYear();
+  const currentMonth = String(currentDate.getUTCMonth() + 1).padStart(2, '0');
+  const currentDay = String(currentDate.getUTCDate()).padStart(2, '0');
+  
+  // Extract time components for the current date
+  const currentHours = String(currentDate.getUTCHours()).padStart(2, '0');
+  const currentMinutes = String(currentDate.getUTCMinutes()).padStart(2, '0');
+  const currentSeconds = String(currentDate.getUTCSeconds()).padStart(2, '0');
+  const currentMilliseconds = String(currentDate.getUTCMilliseconds()).padStart(3, '0');
+  
+  // Construct the formatted date string for the current date
+  const currentFormattedDateString = `${currentYear}-${currentMonth}-${currentDay}T${currentHours}:${currentMinutes}:${currentSeconds}.${currentMilliseconds}+00:00`;
+  
+  // Extract date components for the date 7 days ago
+  const sevenDaysAgoYear = sevenDaysAgo.getUTCFullYear();
+  const sevenDaysAgoMonth = String(sevenDaysAgo.getUTCMonth() + 1).padStart(2, '0');
+  const sevenDaysAgoDay = String(sevenDaysAgo.getUTCDate()).padStart(2, '0');
+  
+  // Extract time components for the date 7 days ago
+  const sevenDaysAgoHours = String(sevenDaysAgo.getUTCHours()).padStart(2, '0');
+  const sevenDaysAgoMinutes = String(sevenDaysAgo.getUTCMinutes()).padStart(2, '0');
+  const sevenDaysAgoSeconds = String(sevenDaysAgo.getUTCSeconds()).padStart(2, '0');
+  const sevenDaysAgoMilliseconds = String(sevenDaysAgo.getUTCMilliseconds()).padStart(3, '0');
+  
+  // Construct the formatted date string for the date 7 days ago
+  const sevenDaysAgoFormattedDateString = `${sevenDaysAgoYear}-${sevenDaysAgoMonth}-${sevenDaysAgoDay}T${sevenDaysAgoHours}:${sevenDaysAgoMinutes}:${sevenDaysAgoSeconds}.${sevenDaysAgoMilliseconds}+00:00`;
+  
+  console.log("Current Date:", currentFormattedDateString);
+  console.log("7 days ago Date:", sevenDaysAgoFormattedDateString);
 }, {
   timezone: 'Asia/Kolkata',
 });
