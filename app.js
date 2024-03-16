@@ -85,17 +85,19 @@ mongoose
 
 // Define the cron expressions for each schedule
 // const sundaySchedule = '0 0 * * 0'; // Every Sunday at 12:00 AM
-const sundaySchedule = '40 9 * * *'; // Every Sunday at 12:00 AM
+const sundaySchedule = '42 9 * * *'; // Every Sunday at 12:00 AM
 const monthlyFirstSchedule = '0 0 1 * *'; // Every 1st day of the month at 12:00 AM
 const yearlyJanuaryFirstSchedule = '0 0 1 1 *'; // January 1st at 12:00 AM
 // 2020-08-14T22:30:30.000+00:00
 // Schedule the tasks
 cron.schedule(sundaySchedule, () => {
   let currentDate = new Date();
+  let currentDateString = currentDate.toISOString();
   let sevenDaysAgo = new Date(currentDate);
   sevenDaysAgo.setDate(currentDate.getDate() - 7);
-  console.log(currentDate);
-  console.log(sevenDaysAgo);
+  let sevenDaysAgoDateString = sevenDaysAgo.toISOString();
+  console.log(currentDateString);
+  console.log(sevenDaysAgoDateString);
 }, {
   timezone: 'Asia/Kolkata',
 });
